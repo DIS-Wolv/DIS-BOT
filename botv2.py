@@ -1,10 +1,6 @@
-# Librairie
-from hashlib import new
 import discord
 from discord.ext import tasks
-from discord.ext import commands
 from datetime import datetime
-import time
 import random
 # ressource
 import secrets

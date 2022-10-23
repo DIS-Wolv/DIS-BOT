@@ -10,7 +10,7 @@ import random
 import secrets
 import inscription
 import testmsg
-from sources import *
+# from sources import *
 
 print("===============================================================================================\nDémarrage du bot le : ", datetime.now().day, "/", datetime.now().month, "/",
       datetime.now().year, 'à', datetime.now().hour, "h",

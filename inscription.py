@@ -1,4 +1,3 @@
-from inspect import _void
 import pygsheets
 import secrets
 from sources import *
