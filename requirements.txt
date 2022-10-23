@@ -1,2 +1,3 @@
 discord
 pygsheets
+python-dotenv

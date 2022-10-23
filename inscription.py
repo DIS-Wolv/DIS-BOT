@@ -2,10 +2,17 @@ import pygsheets
 import secrets
 from sources import *
 from datetime import datetime
+from os import getenv
+
+from dotenv import load_dotenv
+
+load_dotenv()
+service_file=getenv('GOOGLE_API_KEY_FILE')
+if not service_file:
+    raise EnvironmentError('GOOGLE_API_KEY_FILE not set')
 
 # autorisation
-gc = pygsheets.authorize(service_file='bot-dis-318119-b1d3fcbed6d4.json')
-# gc = pygsheets.authorize(client_secret='bot-dis-318119-b1d3fcbed6d4.json')
+gc = pygsheets.authorize(service_file=service_file)
 
 # ouverture du google sheet
 sh = gc.open('Planning')
