@@ -10,6 +10,7 @@ from bot import secrets
 from bot import inscription
 from bot import utils
 from bot.utils import log
+from bot.sources import new_member_msg
 
 # définition du bot
 intents = discord.Intents.all()
