@@ -41,11 +41,11 @@ def jourTransfo(jour):
     return page
 
 
-def IdToUser(ID):
+def IdToUser(ID, dico):
     """
     transforme un ID en username
     """
-    dico = init()  # initialise dico
+    # dico = init()  # initialise dico
     user = str(ID)  # récupère l'id de l'utilisateur
     if user in dico[1]:
         pos = dico[1].index(user)
@@ -54,11 +54,11 @@ def IdToUser(ID):
         return False
 
 
-def UserToID(user):
+def UserToID(user, dico):
     """
     transforme un username en ID
     """
-    dico = init()  # initialise dico
+    # dico = init()  # initialise dico
     user = [str(user)]  # récupère l'id de l'utilisateur
     if user in dico[0]:
         pos = dico[0].index(user)

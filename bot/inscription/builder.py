@@ -3,11 +3,11 @@ from bot import secrets
 from bot.inscription.utils import UserToID
 from bot.inscription.constants import jourNom
 
-def build_msg(jour, name, zeus, brief, inscrit, role, commentaire, Sanglier, Crocodile, Grizzli, Aligator, Albatros, Harfang):
+def build_msg(dico, jour, name, zeus, brief, inscrit, role, commentaire, Sanglier, Crocodile, Grizzli, Aligator, Albatros, Harfang):
     """crée le message d'annonce"""
     msg = "<@&" + str(secrets.ROLE_ID) + "> **" + name[0][0] + "** organisée par __"
-    if UserToID(zeus[0][0]) != False:
-        msg += "<@" + UserToID(zeus[0][0]) + ">"
+    if UserToID(zeus[0][0], dico) != False:
+        msg += "<@" + UserToID(zeus[0][0], dico) + ">"
     else:
         msg += zeus[0][0]
 
@@ -94,12 +94,12 @@ def build_msg(jour, name, zeus, brief, inscrit, role, commentaire, Sanglier, Cro
             msg += "\n**Sanglier :**"
             msg += "\n*Blanc :*"  # Blanc
             if Sanglier[0] != [""]:
-                if UserToID(Sanglier[0][0]) != False:
+                if UserToID(Sanglier[0][0], dico) != False:
                     msg += (
                         "\n\t <:cdg:"
                         + str(secrets.CDG_EMOTE_ID)
                         + ">\t<@"
-                        + UserToID(Sanglier[0][0])
+                        + UserToID(Sanglier[0][0], dico)
                         + ">"
                     )
                 else:
@@ -111,12 +111,12 @@ def build_msg(jour, name, zeus, brief, inscrit, role, commentaire, Sanglier, Cro
                     )
 
             if Sanglier[1] != [""]:
-                if UserToID(Sanglier[1][0]) != False:
+                if UserToID(Sanglier[1][0], dico) != False:
                     msg += (
                         "\n\t <:medecin:"
                         + str(secrets.MED_EMOTE_ID)
                         + ">\t<@"
-                        + UserToID(Sanglier[1][0])
+                        + UserToID(Sanglier[1][0], dico)
                         + ">"
                     )
                 else:
@@ -128,12 +128,12 @@ def build_msg(jour, name, zeus, brief, inscrit, role, commentaire, Sanglier, Cro
                     )
 
             if Sanglier[2] != [""]:
-                if UserToID(Sanglier[2][0]) != False:
+                if UserToID(Sanglier[2][0], dico) != False:
                     msg += (
                         "\n\t <:DIS:"
                         + str(secrets.DIS_EMOTE_ID)
                         + ">\t<@"
-                        + UserToID(Sanglier[2][0])
+                        + UserToID(Sanglier[2][0], dico)
                         + ">"
                     )
                 else:
@@ -145,12 +145,12 @@ def build_msg(jour, name, zeus, brief, inscrit, role, commentaire, Sanglier, Cro
                     )
 
             if Sanglier[3] != [""]:
-                if UserToID(Sanglier[3][0]) != False:
+                if UserToID(Sanglier[3][0], dico) != False:
                     msg += (
                         "\n\t <:DIS:"
                         + str(secrets.DIS_EMOTE_ID)
                         + ">\t<@"
-                        + UserToID(Sanglier[3][0])
+                        + UserToID(Sanglier[3][0], dico)
                         + ">"
                     )
                 else:
@@ -169,12 +169,12 @@ def build_msg(jour, name, zeus, brief, inscrit, role, commentaire, Sanglier, Cro
             ):
                 msg += "\n*Bleu :*"  # Bleu
                 if Sanglier[4] != [""]:
-                    if UserToID(Sanglier[4][0]) != False:
+                    if UserToID(Sanglier[4][0], dico) != False:
                         msg += (
                             "\n\t <:cde:"
                             + str(secrets.CDE_EMOTE_ID)
                             + ">\t<@"
-                            + UserToID(Sanglier[4][0])
+                            + UserToID(Sanglier[4][0], dico)
                             + ">"
                         )
                     else:
@@ -186,12 +186,12 @@ def build_msg(jour, name, zeus, brief, inscrit, role, commentaire, Sanglier, Cro
                         )
 
                 if Sanglier[5] != [""]:
-                    if UserToID(Sanglier[5][0]) != False:
+                    if UserToID(Sanglier[5][0], dico) != False:
                         msg += (
                             "\n\t <:DIS:"
                             + str(secrets.DIS_EMOTE_ID)
                             + ">\t<@"
-                            + UserToID(Sanglier[5][0])
+                            + UserToID(Sanglier[5][0], dico)
                             + ">"
                         )
                     else:
@@ -202,12 +202,12 @@ def build_msg(jour, name, zeus, brief, inscrit, role, commentaire, Sanglier, Cro
                             + Sanglier[5][0]
                         )
                 if Sanglier[6] != [""]:
-                    if UserToID(Sanglier[6][0]) != False:
+                    if UserToID(Sanglier[6][0], dico) != False:
                         msg += (
                             "\n\t <:DIS:"
                             + str(secrets.DIS_EMOTE_ID)
                             + ">\t<@"
-                            + UserToID(Sanglier[6][0])
+                            + UserToID(Sanglier[6][0], dico)
                             + ">"
                         )
                     else:
@@ -219,12 +219,12 @@ def build_msg(jour, name, zeus, brief, inscrit, role, commentaire, Sanglier, Cro
                         )
 
                 if Sanglier[7] != [""]:
-                    if UserToID(Sanglier[7][0]) != False:
+                    if UserToID(Sanglier[7][0], dico) != False:
                         msg += (
                             "\n\t <:DIS:"
                             + str(secrets.DIS_EMOTE_ID)
                             + ">\t<@"
-                            + UserToID(Sanglier[7][0])
+                            + UserToID(Sanglier[7][0], dico)
                             + ">"
                         )
                     else:
@@ -243,12 +243,12 @@ def build_msg(jour, name, zeus, brief, inscrit, role, commentaire, Sanglier, Cro
             ):
                 msg += "\n*Vert :*"  # Vert
                 if Sanglier[8] != [""]:
-                    if UserToID(Sanglier[8][0]) != False:
+                    if UserToID(Sanglier[8][0], dico) != False:
                         msg += (
                             "\n\t <:cde:"
                             + str(secrets.CDE_EMOTE_ID)
                             + ">\t<@"
-                            + UserToID(Sanglier[8][0])
+                            + UserToID(Sanglier[8][0], dico)
                             + ">"
                         )
                     else:
@@ -260,12 +260,12 @@ def build_msg(jour, name, zeus, brief, inscrit, role, commentaire, Sanglier, Cro
                         )
 
                 if Sanglier[9] != [""]:
-                    if UserToID(Sanglier[9][0]) != False:
+                    if UserToID(Sanglier[9][0], dico) != False:
                         msg += (
                             "\n\t <:DIS:"
                             + str(secrets.DIS_EMOTE_ID)
                             + ">\t<@"
-                            + UserToID(Sanglier[9][0])
+                            + UserToID(Sanglier[9][0], dico)
                             + ">"
                         )
                     else:
@@ -277,12 +277,12 @@ def build_msg(jour, name, zeus, brief, inscrit, role, commentaire, Sanglier, Cro
                         )
 
                 if Sanglier[10] != [""]:
-                    if UserToID(Sanglier[10][0]) != False:
+                    if UserToID(Sanglier[10][0], dico) != False:
                         msg += (
                             "\n\t <:DIS:"
                             + str(secrets.DIS_EMOTE_ID)
                             + ">\t<@"
-                            + UserToID(Sanglier[10][0])
+                            + UserToID(Sanglier[10][0], dico)
                             + ">"
                         )
                     else:
@@ -294,12 +294,12 @@ def build_msg(jour, name, zeus, brief, inscrit, role, commentaire, Sanglier, Cro
                         )
 
                 if Sanglier[11] != [""]:
-                    if UserToID(Sanglier[11][0]) != False:
+                    if UserToID(Sanglier[11][0], dico) != False:
                         msg += (
                             "\n\t <:DIS:"
                             + str(secrets.DIS_EMOTE_ID)
                             + ">\t<@"
-                            + UserToID(Sanglier[11][0])
+                            + UserToID(Sanglier[11][0], dico)
                             + ">"
                         )
                     else:
@@ -313,12 +313,12 @@ def build_msg(jour, name, zeus, brief, inscrit, role, commentaire, Sanglier, Cro
             if Sanglier[12] != [""] or Sanglier[13] != [""]:
                 msg += "\n*Rouge :*"  # Rouge
                 if Sanglier[12] != [""]:
-                    if UserToID(Sanglier[12][0]) != False:
+                    if UserToID(Sanglier[12][0], dico) != False:
                         msg += (
                             "\n\t <:cde:"
                             + str(secrets.CDE_EMOTE_ID)
                             + ">\t<@"
-                            + UserToID(Sanglier[12][0])
+                            + UserToID(Sanglier[12][0], dico)
                             + ">"
                         )
                     else:
@@ -330,12 +330,12 @@ def build_msg(jour, name, zeus, brief, inscrit, role, commentaire, Sanglier, Cro
                         )
 
                 if Sanglier[13] != [""]:
-                    if UserToID(Sanglier[13][0]) != False:
+                    if UserToID(Sanglier[13][0], dico) != False:
                         msg += (
                             "\n\t <:DIS:"
                             + str(secrets.DIS_EMOTE_ID)
                             + ">\t<@"
-                            + UserToID(Sanglier[13][0])
+                            + UserToID(Sanglier[13][0], dico)
                             + ">"
                         )
                     else:
@@ -347,12 +347,12 @@ def build_msg(jour, name, zeus, brief, inscrit, role, commentaire, Sanglier, Cro
                         )
 
             if Sanglier[14] != [""]:
-                if UserToID(Sanglier[14][0]) != False:
+                if UserToID(Sanglier[14][0], dico) != False:
                     msg += (
                         "\n\t <:DIS:"
                         + str(secrets.DIS_EMOTE_ID)
                         + ">\t<@"
-                        + UserToID(Sanglier[14][0])
+                        + UserToID(Sanglier[14][0], dico)
                         + ">"
                     )
                 else:
@@ -368,12 +368,12 @@ def build_msg(jour, name, zeus, brief, inscrit, role, commentaire, Sanglier, Cro
             msg += "\n**Grizzli :**"
             msg += "\n*Blanc :*"  # Blanc
             if Grizzli[0] != [""]:
-                if UserToID(Grizzli[0][0]) != False:
+                if UserToID(Grizzli[0][0], dico) != False:
                     msg += (
                         "\n\t <:cdg:"
                         + str(secrets.CDG_EMOTE_ID)
                         + ">\t<@"
-                        + UserToID(Grizzli[0][0])
+                        + UserToID(Grizzli[0][0], dico)
                         + ">"
                     )
                 else:
@@ -385,12 +385,12 @@ def build_msg(jour, name, zeus, brief, inscrit, role, commentaire, Sanglier, Cro
                     )
 
             if Grizzli[1] != [""]:
-                if UserToID(Grizzli[1][0]) != False:
+                if UserToID(Grizzli[1][0], dico) != False:
                     msg += (
                         "\n\t <:medecin:"
                         + str(secrets.MED_EMOTE_ID)
                         + ">\t<@"
-                        + UserToID(Grizzli[1][0])
+                        + UserToID(Grizzli[1][0], dico)
                         + ">"
                     )
                 else:
@@ -402,12 +402,12 @@ def build_msg(jour, name, zeus, brief, inscrit, role, commentaire, Sanglier, Cro
                     )
 
             if Grizzli[2] != [""]:
-                if UserToID(Grizzli[2][0]) != False:
+                if UserToID(Grizzli[2][0], dico) != False:
                     msg += (
                         "\n\t <:DIS:"
                         + str(secrets.DIS_EMOTE_ID)
                         + ">\t<@"
-                        + UserToID(Grizzli[2][0])
+                        + UserToID(Grizzli[2][0], dico)
                         + ">"
                     )
                 else:
@@ -419,12 +419,12 @@ def build_msg(jour, name, zeus, brief, inscrit, role, commentaire, Sanglier, Cro
                     )
 
             if Grizzli[3] != [""]:
-                if UserToID(Grizzli[3][0]) != False:
+                if UserToID(Grizzli[3][0], dico) != False:
                     msg += (
                         "\n\t <:DIS:"
                         + str(secrets.DIS_EMOTE_ID)
                         + ">\t<@"
-                        + UserToID(Grizzli[3][0])
+                        + UserToID(Grizzli[3][0], dico)
                         + ">"
                     )
                 else:
@@ -443,12 +443,12 @@ def build_msg(jour, name, zeus, brief, inscrit, role, commentaire, Sanglier, Cro
             ):
                 msg += "\n*Bleu :*"  # Bleu
                 if Grizzli[4] != [""]:
-                    if UserToID(Grizzli[4][0]) != False:
+                    if UserToID(Grizzli[4][0], dico) != False:
                         msg += (
                             "\n\t <:cde:"
                             + str(secrets.CDE_EMOTE_ID)
                             + ">\t<@"
-                            + UserToID(Grizzli[4][0])
+                            + UserToID(Grizzli[4][0], dico)
                             + ">"
                         )
                     else:
@@ -460,12 +460,12 @@ def build_msg(jour, name, zeus, brief, inscrit, role, commentaire, Sanglier, Cro
                         )
 
                 if Grizzli[5] != [""]:
-                    if UserToID(Grizzli[5][0]) != False:
+                    if UserToID(Grizzli[5][0], dico) != False:
                         msg += (
                             "\n\t <:DIS:"
                             + str(secrets.DIS_EMOTE_ID)
                             + ">\t<@"
-                            + UserToID(Grizzli[5][0])
+                            + UserToID(Grizzli[5][0], dico)
                             + ">"
                         )
                     else:
@@ -476,12 +476,12 @@ def build_msg(jour, name, zeus, brief, inscrit, role, commentaire, Sanglier, Cro
                             + Grizzli[5][0]
                         )
                 if Grizzli[6] != [""]:
-                    if UserToID(Grizzli[6][0]) != False:
+                    if UserToID(Grizzli[6][0], dico) != False:
                         msg += (
                             "\n\t <:DIS:"
                             + str(secrets.DIS_EMOTE_ID)
                             + ">\t<@"
-                            + UserToID(Grizzli[6][0])
+                            + UserToID(Grizzli[6][0], dico)
                             + ">"
                         )
                     else:
@@ -493,12 +493,12 @@ def build_msg(jour, name, zeus, brief, inscrit, role, commentaire, Sanglier, Cro
                         )
 
                 if Grizzli[7] != [""]:
-                    if UserToID(Grizzli[7][0]) != False:
+                    if UserToID(Grizzli[7][0], dico) != False:
                         msg += (
                             "\n\t <:DIS:"
                             + str(secrets.DIS_EMOTE_ID)
                             + ">\t<@"
-                            + UserToID(Grizzli[7][0])
+                            + UserToID(Grizzli[7][0], dico)
                             + ">"
                         )
                     else:
@@ -517,12 +517,12 @@ def build_msg(jour, name, zeus, brief, inscrit, role, commentaire, Sanglier, Cro
             ):
                 msg += "\n*Vert :*"  # Vert
                 if Grizzli[8] != [""]:
-                    if UserToID(Grizzli[8][0]) != False:
+                    if UserToID(Grizzli[8][0], dico) != False:
                         msg += (
                             "\n\t <:cde:"
                             + str(secrets.CDE_EMOTE_ID)
                             + ">\t<@"
-                            + UserToID(Grizzli[8][0])
+                            + UserToID(Grizzli[8][0], dico)
                             + ">"
                         )
                     else:
@@ -534,12 +534,12 @@ def build_msg(jour, name, zeus, brief, inscrit, role, commentaire, Sanglier, Cro
                         )
 
                 if Grizzli[9] != [""]:
-                    if UserToID(Grizzli[9][0]) != False:
+                    if UserToID(Grizzli[9][0], dico) != False:
                         msg += (
                             "\n\t <:DIS:"
                             + str(secrets.DIS_EMOTE_ID)
                             + ">\t<@"
-                            + UserToID(Grizzli[9][0])
+                            + UserToID(Grizzli[9][0], dico)
                             + ">"
                         )
                     else:
@@ -551,12 +551,12 @@ def build_msg(jour, name, zeus, brief, inscrit, role, commentaire, Sanglier, Cro
                         )
 
                 if Grizzli[10] != [""]:
-                    if UserToID(Grizzli[10][0]) != False:
+                    if UserToID(Grizzli[10][0], dico) != False:
                         msg += (
                             "\n\t <:DIS:"
                             + str(secrets.DIS_EMOTE_ID)
                             + ">\t<@"
-                            + UserToID(Grizzli[10][0])
+                            + UserToID(Grizzli[10][0], dico)
                             + ">"
                         )
                     else:
@@ -568,12 +568,12 @@ def build_msg(jour, name, zeus, brief, inscrit, role, commentaire, Sanglier, Cro
                         )
 
                 if Grizzli[11] != [""]:
-                    if UserToID(Grizzli[11][0]) != False:
+                    if UserToID(Grizzli[11][0], dico) != False:
                         msg += (
                             "\n\t <:DIS:"
                             + str(secrets.DIS_EMOTE_ID)
                             + ">\t<@"
-                            + UserToID(Grizzli[11][0])
+                            + UserToID(Grizzli[11][0], dico)
                             + ">"
                         )
                     else:
@@ -587,12 +587,12 @@ def build_msg(jour, name, zeus, brief, inscrit, role, commentaire, Sanglier, Cro
             if Grizzli[12] != [""] or Grizzli[13] != [""]:
                 msg += "\n*Rouge :*"  # Rouge
                 if Grizzli[12] != [""]:
-                    if UserToID(Grizzli[12][0]) != False:
+                    if UserToID(Grizzli[12][0], dico) != False:
                         msg += (
                             "\n\t <:cde:"
                             + str(secrets.CDE_EMOTE_ID)
                             + ">\t<@"
-                            + UserToID(Grizzli[12][0])
+                            + UserToID(Grizzli[12][0], dico)
                             + ">"
                         )
                     else:
@@ -604,12 +604,12 @@ def build_msg(jour, name, zeus, brief, inscrit, role, commentaire, Sanglier, Cro
                         )
 
                 if Grizzli[13] != [""]:
-                    if UserToID(Grizzli[13][0]) != False:
+                    if UserToID(Grizzli[13][0], dico) != False:
                         msg += (
                             "\n\t <:DIS:"
                             + str(secrets.DIS_EMOTE_ID)
                             + ">\t<@"
-                            + UserToID(Grizzli[13][0])
+                            + UserToID(Grizzli[13][0], dico)
                             + ">"
                         )
                     else:
@@ -621,12 +621,12 @@ def build_msg(jour, name, zeus, brief, inscrit, role, commentaire, Sanglier, Cro
                         )
 
             if Grizzli[14] != [""]:
-                if UserToID(Grizzli[14][0]) != False:
+                if UserToID(Grizzli[14][0], dico) != False:
                     msg += (
                         "\n\t <:DIS:"
                         + str(secrets.DIS_EMOTE_ID)
                         + ">\t<@"
-                        + UserToID(Grizzli[14][0])
+                        + UserToID(Grizzli[14][0], dico)
                         + ">"
                     )
                 else:
@@ -641,12 +641,12 @@ def build_msg(jour, name, zeus, brief, inscrit, role, commentaire, Sanglier, Cro
         if AlbatrosA:
             msg += "\n\n**Albatros :**"
             if Albatros[0] != [""]:
-                if UserToID(Albatros[0][0]) != False:
+                if UserToID(Albatros[0][0], dico) != False:
                     msg += (
                         "\n\t <:DIS:"
                         + str(secrets.DIS_EMOTE_ID)
                         + ">\t<@"
-                        + UserToID(Albatros[0][0])
+                        + UserToID(Albatros[0][0], dico)
                         + ">"
                     )
                 else:
@@ -657,12 +657,12 @@ def build_msg(jour, name, zeus, brief, inscrit, role, commentaire, Sanglier, Cro
                         + Albatros[0][0]
                     )
             if Albatros[1] != [""]:
-                if UserToID(Albatros[1][0]) != False:
+                if UserToID(Albatros[1][0], dico) != False:
                     msg += (
                         "\n\t <:DIS:"
                         + str(secrets.DIS_EMOTE_ID)
                         + ">\t<@"
-                        + UserToID(Albatros[1][0])
+                        + UserToID(Albatros[1][0], dico)
                         + ">"
                     )
                 else:
@@ -673,12 +673,12 @@ def build_msg(jour, name, zeus, brief, inscrit, role, commentaire, Sanglier, Cro
                         + Albatros[1][0]
                     )
             if Albatros[2] != [""]:
-                if UserToID(Albatros[2][0]) != False:
+                if UserToID(Albatros[2][0], dico) != False:
                     msg += (
                         "\n\t <:DIS:"
                         + str(secrets.DIS_EMOTE_ID)
                         + ">\t<@"
-                        + UserToID(Albatros[2][0])
+                        + UserToID(Albatros[2][0], dico)
                         + ">"
                     )
                 else:
@@ -689,12 +689,12 @@ def build_msg(jour, name, zeus, brief, inscrit, role, commentaire, Sanglier, Cro
                         + Albatros[2][0]
                     )
             if Albatros[3] != [""]:
-                if UserToID(Albatros[3][0]) != False:
+                if UserToID(Albatros[3][0], dico) != False:
                     msg += (
                         "\n\t <:DIS:"
                         + str(secrets.DIS_EMOTE_ID)
                         + ">\t<@"
-                        + UserToID(Albatros[3][0])
+                        + UserToID(Albatros[3][0], dico)
                         + ">"
                     )
                 else:
@@ -709,12 +709,12 @@ def build_msg(jour, name, zeus, brief, inscrit, role, commentaire, Sanglier, Cro
         if HarfangA:
             msg += "\n\n**Harfang :**"
             if Harfang[0] != [""]:
-                if UserToID(Harfang[0][0]) != False:
+                if UserToID(Harfang[0][0], dico) != False:
                     msg += (
                         "\n\t <:DIS:"
                         + str(secrets.DIS_EMOTE_ID)
                         + ">\t<@"
-                        + UserToID(Harfang[0][0])
+                        + UserToID(Harfang[0][0], dico)
                         + ">"
                     )
                 else:
@@ -725,12 +725,12 @@ def build_msg(jour, name, zeus, brief, inscrit, role, commentaire, Sanglier, Cro
                         + Harfang[0][0]
                     )
             if Harfang[1] != [""]:
-                if UserToID(Harfang[1][0]) != False:
+                if UserToID(Harfang[1][0], dico) != False:
                     msg += (
                         "\n\t <:DIS:"
                         + str(secrets.DIS_EMOTE_ID)
                         + ">\t<@"
-                        + UserToID(Harfang[1][0])
+                        + UserToID(Harfang[1][0], dico)
                         + ">"
                     )
                 else:
@@ -741,12 +741,12 @@ def build_msg(jour, name, zeus, brief, inscrit, role, commentaire, Sanglier, Cro
                         + Harfang[1][0]
                     )
             if Harfang[2] != [""]:
-                if UserToID(Harfang[2][0]) != False:
+                if UserToID(Harfang[2][0], dico) != False:
                     msg += (
                         "\n\t <:DIS:"
                         + str(secrets.DIS_EMOTE_ID)
                         + ">\t<@"
-                        + UserToID(Harfang[2][0])
+                        + UserToID(Harfang[2][0], dico)
                         + ">"
                     )
                 else:
@@ -757,12 +757,12 @@ def build_msg(jour, name, zeus, brief, inscrit, role, commentaire, Sanglier, Cro
                         + Harfang[2][0]
                     )
             if Harfang[3] != [""]:
-                if UserToID(Harfang[3][0]) != False:
+                if UserToID(Harfang[3][0], dico) != False:
                     msg += (
                         "\n\t <:DIS:"
                         + str(secrets.DIS_EMOTE_ID)
                         + ">\t<@"
-                        + UserToID(Harfang[3][0])
+                        + UserToID(Harfang[3][0], dico)
                         + ">"
                     )
                 else:
@@ -777,12 +777,12 @@ def build_msg(jour, name, zeus, brief, inscrit, role, commentaire, Sanglier, Cro
         if CrocodileA:
             msg += "\n\n**Crocodile :**"
             if Crocodile[0] != [""]:
-                if UserToID(Crocodile[0][0]) != False:
+                if UserToID(Crocodile[0][0], dico) != False:
                     msg += (
                         "\n\t <:cdg:"
                         + str(secrets.CDG_EMOTE_ID)
                         + ">\t<@"
-                        + UserToID(Crocodile[0][0])
+                        + UserToID(Crocodile[0][0], dico)
                         + ">"
                     )
                 else:
@@ -793,12 +793,12 @@ def build_msg(jour, name, zeus, brief, inscrit, role, commentaire, Sanglier, Cro
                         + Crocodile[0][0]
                     )
             if Crocodile[1] != [""]:
-                if UserToID(Crocodile[1][0]) != False:
+                if UserToID(Crocodile[1][0], dico) != False:
                     msg += (
                         "\n\t <:DIS:"
                         + str(secrets.DIS_EMOTE_ID)
                         + ">\t<@"
-                        + UserToID(Crocodile[1][0])
+                        + UserToID(Crocodile[1][0], dico)
                         + ">"
                     )
                 else:
@@ -809,12 +809,12 @@ def build_msg(jour, name, zeus, brief, inscrit, role, commentaire, Sanglier, Cro
                         + Crocodile[1][0]
                     )
             if Crocodile[2] != [""]:
-                if UserToID(Crocodile[2][0]) != False:
+                if UserToID(Crocodile[2][0], dico) != False:
                     msg += (
                         "\n\t <:DIS:"
                         + str(secrets.DIS_EMOTE_ID)
                         + ">\t<@"
-                        + UserToID(Crocodile[2][0])
+                        + UserToID(Crocodile[2][0], dico)
                         + ">"
                     )
                 else:
@@ -829,12 +829,12 @@ def build_msg(jour, name, zeus, brief, inscrit, role, commentaire, Sanglier, Cro
         if AligatorA:
             msg += "\n\n**Aligator :**"
             if Aligator[0] != [""]:
-                if UserToID(Aligator[0][0]) != False:
+                if UserToID(Aligator[0][0], dico) != False:
                     msg += (
                         "\n\t <:cdg:"
                         + str(secrets.CDG_EMOTE_ID)
                         + ">\t<@"
-                        + UserToID(Aligator[0][0])
+                        + UserToID(Aligator[0][0], dico)
                         + ">"
                     )
                 else:
@@ -845,12 +845,12 @@ def build_msg(jour, name, zeus, brief, inscrit, role, commentaire, Sanglier, Cro
                         + Aligator[0][0]
                     )
             if Aligator[1] != [""]:
-                if UserToID(Aligator[1][0]) != False:
+                if UserToID(Aligator[1][0], dico) != False:
                     msg += (
                         "\n\t <:DIS:"
                         + str(secrets.DIS_EMOTE_ID)
                         + ">\t<@"
-                        + UserToID(Aligator[1][0])
+                        + UserToID(Aligator[1][0], dico)
                         + ">"
                     )
                 else:
@@ -861,12 +861,12 @@ def build_msg(jour, name, zeus, brief, inscrit, role, commentaire, Sanglier, Cro
                         + Aligator[1][0]
                     )
             if Aligator[2] != [""]:
-                if UserToID(Aligator[2][0]) != False:
+                if UserToID(Aligator[2][0], dico) != False:
                     msg += (
                         "\n\t <:DIS:"
                         + str(secrets.DIS_EMOTE_ID)
                         + ">\t<@"
-                        + UserToID(Aligator[2][0])
+                        + UserToID(Aligator[2][0], dico)
                         + ">"
                     )
                 else:
@@ -895,8 +895,8 @@ def build_msg(jour, name, zeus, brief, inscrit, role, commentaire, Sanglier, Cro
         if inscrit[i] != [""] and affecter == False:
             if role[i][0] == "CDG":
                 msg += "\n\t<:cdg:" + str(secrets.CDG_EMOTE_ID) + "> "
-                if UserToID(zeus[0][0]) != False:
-                    msg += "<@" + UserToID(inscrit[i][0]) + ">"
+                if UserToID(zeus[0][0], dico) != False:
+                    msg += "<@" + UserToID(inscrit[i][0], dico) + ">"
                 else:
                     msg += inscrit[i][0]
 
@@ -905,8 +905,8 @@ def build_msg(jour, name, zeus, brief, inscrit, role, commentaire, Sanglier, Cro
                         msg += " (" + commentaire[i][0] + ")"
             elif role[i][0] == "CDE":
                 msg += "\n\t<:cde:" + str(secrets.CDE_EMOTE_ID) + "> "
-                if UserToID(zeus[0][0]) != False:
-                    msg += "<@" + UserToID(inscrit[i][0]) + ">"
+                if UserToID(zeus[0][0], dico) != False:
+                    msg += "<@" + UserToID(inscrit[i][0], dico) + ">"
                 else:
                     msg += inscrit[i][0]
 
@@ -915,8 +915,8 @@ def build_msg(jour, name, zeus, brief, inscrit, role, commentaire, Sanglier, Cro
                         msg += " (" + commentaire[i][0] + ")"
             elif role[i][0] == "Médecin":
                 msg += "\n\t<:medecin:" + str(secrets.MED_EMOTE_ID) + "> "
-                if UserToID(zeus[0][0]) != False:
-                    msg += "<@" + UserToID(inscrit[i][0]) + ">"
+                if UserToID(zeus[0][0], dico) != False:
+                    msg += "<@" + UserToID(inscrit[i][0], dico) + ">"
                 else:
                     msg += inscrit[i][0]
 
@@ -925,8 +925,8 @@ def build_msg(jour, name, zeus, brief, inscrit, role, commentaire, Sanglier, Cro
                         msg += " (" + commentaire[i][0] + ")"
             elif role[i][0] == "Minimi":
                 msg += "\n\t<:mg:" + str(secrets.MINI_EMOTE_ID) + "> "
-                if UserToID(zeus[0][0]) != False:
-                    msg += "<@" + UserToID(inscrit[i][0]) + ">"
+                if UserToID(zeus[0][0], dico) != False:
+                    msg += "<@" + UserToID(inscrit[i][0], dico) + ">"
                 else:
                     msg += inscrit[i][0]
 
@@ -935,8 +935,8 @@ def build_msg(jour, name, zeus, brief, inscrit, role, commentaire, Sanglier, Cro
                         msg += " (" + commentaire[i][0] + ")"
             elif role[i][0] == "GV":
                 msg += "\n\t<:DIS:" + str(secrets.DIS_EMOTE_ID) + "> "
-                if UserToID(zeus[0][0]) != False:
-                    msg += "<@" + UserToID(inscrit[i][0]) + ">"
+                if UserToID(zeus[0][0], dico) != False:
+                    msg += "<@" + UserToID(inscrit[i][0], dico) + ">"
                 else:
                     msg += inscrit[i][0]
 
@@ -945,8 +945,8 @@ def build_msg(jour, name, zeus, brief, inscrit, role, commentaire, Sanglier, Cro
                         msg += " (" + commentaire[i][0] + ")"
             else:
                 msg += "\n\t<:DIS:" + str(secrets.DIS_EMOTE_ID) + "> "
-                if UserToID(zeus[0][0]) != False:
-                    msg += "<@" + UserToID(inscrit[i][0]) + ">"
+                if UserToID(zeus[0][0], dico) != False:
+                    msg += "<@" + UserToID(inscrit[i][0], dico) + ">"
                 else:
                     msg += inscrit[i][0]
 

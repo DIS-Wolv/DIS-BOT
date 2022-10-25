@@ -355,6 +355,7 @@ def message(jour):
      0 si pas de missions
      <str> msg si il y a une mission
     """
+    dico = init()  # initialise dico
     log("message")
     log(f"message -- {jour=}")
 
@@ -411,7 +412,7 @@ def message(jour):
         log("message -- fetch groups [done]")
 
         log("message -- build_message")
-        msg = build_msg(jour, name, zeus, brief, inscrit, role, commentaire, Sanglier, Crocodile, Grizzli, Aligator, Albatros, Harfang)
+        msg = build_msg(dico, jour, name, zeus, brief, inscrit, role, commentaire, Sanglier, Crocodile, Grizzli, Aligator, Albatros, Harfang)
         log("message -- build_message [done]")
 
     log("message [done]")
