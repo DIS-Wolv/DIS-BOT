@@ -25,7 +25,6 @@ try:
     CDG_EMOTE_ID = secrets_json["CDG_EMOTE_ID"]
     CDE_EMOTE_ID = secrets_json["CDE_EMOTE_ID"]
     MED_EMOTE_ID = secrets_json["MED_EMOTE_ID"]
-    GV_EMOTE_ID = secrets_json["GV_EMOTE_ID"]
     MINI_EMOTE_ID = secrets_json["MINI_EMOTE_ID"]
     KART_DLC_EMOTE_ID = secrets_json["KART_DLC_EMOTE_ID"]
     HELI_DLC_EMOTE_ID = secrets_json["HELI_DLC_EMOTE_ID"]
