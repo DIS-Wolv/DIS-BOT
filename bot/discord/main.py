@@ -720,7 +720,7 @@ async def loop():
     channel = bot.get_channel(secrets.CHANNEL_ID)
 
     if hour <= 2:  # si l'heure est inférieure ou égale a 2
-        print("Nettoyage de la page", day, "correspondant à", inscription.jourNom[day])
+        print("Nettoyage de la page", day, "correspondant à", jourNom[day])
         print(str(inscription.missionName(day)))
         if inscription.missionName(day) != "":
             await SetActivity("nettoyer le planning")
