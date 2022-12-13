@@ -725,7 +725,20 @@ async def loop():
         if inscription.missionName(day) != "":
             await SetActivity("nettoyer le planning")
 
-            if inscription.missionName(day) == "ODD de la semaine !":
+            print(inscription.missionOrgaName(day))
+            
+            if inscription.missionOrgaName(day) == "Bot": 
+                inscription.clearJoueur(day)
+                # supprime le message du jour précédant
+                async for message in channel.history(
+                    limit=7
+                ):  # pour les 7 derniers messages
+                    jourMsg = utils.jour(message.content)  # recupère le jour du message
+
+                    if jourMsg == day:  # si le message est le message du jour précédant
+                        await message.delete()  # supprime le message
+            
+            elif inscription.missionName(day) == "ODD de la semaine !":
                 inscription.clearJoueur(day)
                 # supprime le message du jour précédant
                 async for message in channel.history(
