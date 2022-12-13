@@ -795,7 +795,7 @@ async def appelMessage():
     channel = bot.get_channel(secrets.CHANNEL_ID)  # recupère le channel du bot
     statut = True  # definie qu'il faut changé le statut
 
-    for i in range(-1, 2):  # sur 3 jours
+    for i in range(-1, 4):  # sur 5 jours
         target = ((day + i) % 7) + 1  # récupère le numéro du jour
         # print(target)
         msg = inscription.message(target)  # recupère le message d'annonce
