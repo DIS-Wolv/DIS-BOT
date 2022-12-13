@@ -502,6 +502,17 @@ def missionName(jour):
     # print(nom)
     return nom[0][0]
 
+def missionOrgaName(jour):
+    """
+    est appellé par le bot
+    renvoie le nom de l'organisateur de la mission
+    """
+    page = jourTransfo(jour)  # transforme le jour en numéro de pag
+    wks = sh[page]  # lecture du document du jour
+    nom = wks.get_values("E3", "E3")  # lit le nom
+    # print(nom)
+    return nom[0][0]
+
 
 def orga(jour):
     """
