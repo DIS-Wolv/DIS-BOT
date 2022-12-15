@@ -10,4 +10,5 @@ from bot.inscription.main import (
     addUser,
     remUser,
     missionName,
+    missionOrgaName,
 )
