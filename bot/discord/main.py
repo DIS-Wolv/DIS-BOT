@@ -727,7 +727,7 @@ async def loop():
 
             print(inscription.missionOrgaName(day))
             
-            if inscription.missionOrgaName(day) == "Bot": 
+            if inscription.missionOrgaName(day) == "[DIS] Bot": 
                 inscription.clearJoueur(day)
                 # supprime le message du jour précédant
                 async for message in channel.history(
