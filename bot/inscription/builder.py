@@ -896,9 +896,9 @@ def build_msg(dico, jour, name, zeus, brief, inscrit, role, commentaire, Sanglie
             if role [i][0] == "CDS":
                 msg += "\n\t<:cds:" + str(secrets.CDS_EMOTE_ID) + "> "
                 if UserToID(zeus[0][0], dico) != False:
-                    msg += "<@" + UserToID(inscrit[i][0], dico) + "> (CDS)"
+                    msg += "<@" + UserToID(inscrit[i][0], dico) + ">"
                 else:
-                    msg += inscrit[i][0] + " (CDS)"
+                    msg += inscrit[i][0]
 
                 if len(commentaire) > i:
                     if commentaire[i][0] != "":
