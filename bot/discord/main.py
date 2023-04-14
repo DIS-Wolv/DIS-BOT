@@ -132,6 +132,9 @@ async def on_message(message):
             if jour != 0:  # si oui
                 # print("REACTION!!!!!!!")
                 await message.add_reaction(
+                    "<:cds:" + str(secrets.CDS_EMOTE_ID) + ">"
+                )  # ajoute les réactions d'inscriptions
+                await message.add_reaction(
                     "<:cdg:" + str(secrets.CDG_EMOTE_ID) + ">"
                 )  # ajoute les réactions d'inscriptions
                 await message.add_reaction(
