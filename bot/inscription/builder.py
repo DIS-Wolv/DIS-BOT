@@ -893,7 +893,17 @@ def build_msg(dico, jour, name, zeus, brief, inscrit, role, commentaire, Sanglie
             affecter = False  # considéré comme non affecté
 
         if inscrit[i] != [""] and affecter == False:
-            if role[i][0] == "CDG":
+            if role [i][0] == "CDS":
+                msg += "\n\t<:cdg:" + str(secrets.CDG_EMOTE_ID) + "> "
+                if UserToID(zeus[0][0], dico) != False:
+                    msg += "<@" + UserToID(inscrit[i][0], dico) + "> (CDS)"
+                else:
+                    msg += inscrit[i][0] + " (CDS)"
+
+                if len(commentaire) > i:
+                    if commentaire[i][0] != "":
+                        msg += " (" + commentaire[i][0] + ")"
+            elif role[i][0] == "CDG":
                 msg += "\n\t<:cdg:" + str(secrets.CDG_EMOTE_ID) + "> "
                 if UserToID(zeus[0][0], dico) != False:
                     msg += "<@" + UserToID(inscrit[i][0], dico) + ">"
