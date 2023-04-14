@@ -24,6 +24,7 @@ member = discord.member
 # liste emoji
 emote = [
     secrets.DIS_EMOTE_ID,
+    secrets.CDS_EMOTE_ID,
     secrets.CDG_EMOTE_ID,
     secrets.CDE_EMOTE_ID,
     secrets.MED_EMOTE_ID,
@@ -476,6 +477,8 @@ async def appelInscription(user, emote, jour):
 
     if emote == secrets.DIS_EMOTE_ID:
         statut = inscription.add(user.id, jour, ["GV"])  # essaye d'inscrire la personne
+    elif emote == secrets.CDS_EMOTE_ID:
+        statut = inscription.add(user.id, jour, ["CDS"])  # essaye d'inscrire la personne
     elif emote == secrets.CDG_EMOTE_ID:
         statut = inscription.add(user.id, jour, ["CDG"])  # essaye d'inscrire la personne
     elif emote == secrets.CDE_EMOTE_ID:
