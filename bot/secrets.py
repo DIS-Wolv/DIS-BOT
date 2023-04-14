@@ -22,6 +22,7 @@ try:
     FNG_ROLE_ID = secrets_json["FNG_ROLE_ID"]
     LINKS = secrets_json["LINKS"]
     DIS_EMOTE_ID = secrets_json["DIS_EMOTE_ID"]
+    CDS_EMOTE_ID = secrets_json["CDS_EMOTE_ID"]
     CDG_EMOTE_ID = secrets_json["CDG_EMOTE_ID"]
     CDE_EMOTE_ID = secrets_json["CDE_EMOTE_ID"]
     MED_EMOTE_ID = secrets_json["MED_EMOTE_ID"]
