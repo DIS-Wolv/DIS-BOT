@@ -477,21 +477,13 @@ async def appelInscription(user, emote, jour):
     if emote == secrets.DIS_EMOTE_ID:
         statut = inscription.add(user.id, jour, ["GV"])  # essaye d'inscrire la personne
     elif emote == secrets.CDG_EMOTE_ID:
-        statut = inscription.add(
-            user.id, jour, ["CDG"]
-        )  # essaye d'inscrire la personne
+        statut = inscription.add(user.id, jour, ["CDG"])  # essaye d'inscrire la personne
     elif emote == secrets.CDE_EMOTE_ID:
-        statut = inscription.add(
-            user.id, jour, ["CDE"]
-        )  # essaye d'inscrire la personne
+        statut = inscription.add(user.id, jour, ["CDE"])  # essaye d'inscrire la personne
     elif emote == secrets.MED_EMOTE_ID:
-        statut = inscription.add(
-            user.id, jour, ["Médecin"]
-        )  # essaye d'inscrire la personne
+        statut = inscription.add(user.id, jour, ["Médecin"])  # essaye d'inscrire la personne
     elif emote == secrets.MINI_EMOTE_ID:
-        statut = inscription.add(
-            user.id, jour, ["Minimi"]
-        )  # essaye d'inscrire la personne
+        statut = inscription.add(user.id, jour, ["Minimi"])  # essaye d'inscrire la personne
     else:
         statut = inscription.add(user.id, jour)  # essaye d'inscrire la personne
 
