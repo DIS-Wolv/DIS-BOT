@@ -569,11 +569,9 @@ async def appelDLC(user, emote, state):
     else:
         err = "ERREUR Reaction DLC :" + user.display_name + " id `" + str(user.id) + "`"
 
-    if (
-        str(user.id) != secrets.CLIENT_ID and err != ""
-    ):  # si l'utilisateur n'est pas le bot
-        await logchannel.send(err)
-        await appelDLC(user, emote, state)
+    # if (str(user.id) != secrets.CLIENT_ID and err != ""):  # si l'utilisateur n'est pas le bot
+    #     await logchannel.send(err)
+    #     await appelDLC(user, emote, state)
 
 
 # quand une réaction est enlevée
