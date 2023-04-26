@@ -649,8 +649,8 @@ async def on_raw_reaction_remove(payload):
             async for user in reaction.users():
                 if str(user.id) != secrets.CLIENT_ID:
                     if user in guild.members:
-                        # await appelDLC(user, reaction.emoji.id, 1)
-                        print(f'{user} a le dlc {reaction.emoji}!')
+                        await appelDLC(user, reaction.emoji.id, 1)
+                        # print(f'{user} a le dlc {reaction.emoji}!')
                     else:
                         await reaction.remove(user)
                         
