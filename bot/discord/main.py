@@ -558,7 +558,7 @@ async def appelDLC(user, emote, state):
             + str(user.id)
             + "`) n'es pas dans la fiche Technique."
         )
-        # inscription.addUser(user.display_name, str(user.id))
+        inscription.addUser(user.display_name, str(user.id))
         err += (
             '\n:white_check_mark: Ajout de "'
             + user.display_name
@@ -569,9 +569,9 @@ async def appelDLC(user, emote, state):
     else:
         err = "ERREUR Reaction DLC :" + user.display_name + " id `" + str(user.id) + "`"
 
-    # if (str(user.id) != secrets.CLIENT_ID and err != ""):  # si l'utilisateur n'est pas le bot
-    #     await logchannel.send(err)
-    #     await appelDLC(user, emote, state)
+    if (str(user.id) != secrets.CLIENT_ID and err != ""):  # si l'utilisateur n'est pas le bot
+        await logchannel.send(err)
+        await appelDLC(user, emote, state)
 
 
 # quand une réaction est enlevée
@@ -647,7 +647,7 @@ async def on_raw_reaction_remove(payload):
         reactions = message.reactions
         for reaction in reactions:
             async for user in reaction.users():
-                if str(user.id) != secrets.CLIENT_ID:
+                if str(user.id) != secrets.CLIENT_ID and user in guild.members:
                     await appelDLC(user, reaction.emoji.id, 1)
                     # print(f'{user} has reacted with {reaction.emoji}!')
 
