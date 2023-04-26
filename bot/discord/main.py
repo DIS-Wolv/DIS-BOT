@@ -401,7 +401,7 @@ async def on_raw_reaction_add(payload):
     message = await channel.fetch_message(
         payload.message_id
     )  # récupère le message en question
-    # print(payload.emoji)
+    # print(message.reactions)
 
     if (
         payload.channel_id == secrets.CHANNEL_ID and str(user.id) != secrets.CLIENT_ID
