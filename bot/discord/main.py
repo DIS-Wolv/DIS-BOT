@@ -652,7 +652,7 @@ async def on_raw_reaction_remove(payload):
                         await appelDLC(user, reaction.emoji.id, 1)
                         # print(f'{user} has reacted with {reaction.emoji}!')
                     else:
-                        await reaction.emoji.remove(user)
+                        await reaction.remove(user)
                         
 
 
