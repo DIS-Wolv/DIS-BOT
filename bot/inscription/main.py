@@ -76,8 +76,8 @@ def add(user: int, jour, rolevoulue=[""]):
         nom = wks.get_values("D1", "D2")  # lit le titre
 
         if nom != [["Entraînement"]]:
-            inscrit = wks.get_values("B17", "B40")  # récupère les inscrits
-            role = wks.get_values("C17", "C40")  # recupère les roles
+            inscrit = wks.get_values("B17", "B56")  # récupère les inscrits
+            role = wks.get_values("C17", "C56")  # recupère les roles
         else:
             inscrit = wks.get_values("B8", "B31")  # récupère les inscrits
             role = wks.get_values("C8", "C31")  # recupère les roles
@@ -107,8 +107,8 @@ def add(user: int, jour, rolevoulue=[""]):
 
             # print(inscrit, role)
             if nom != [["Entraînement"]]:
-                wks.update_values("B17:B40", inscrit)  # met à jour le google sheet
-                wks.update_values("C17:C40", role)  # met à jour la liste des roles
+                wks.update_values("B17:B56", inscrit)  # met à jour le google sheet
+                wks.update_values("C17:C56", role)  # met à jour la liste des roles
             else:
                 wks.update_values("B8:B31", inscrit)  # met à jour le google sheet
                 wks.update_values("C8:C31", role)  # met à jour la liste des roles
@@ -170,9 +170,9 @@ def remove(user, jour):
         nom = wks.get_values("D1", "D2")  # lit le titre
 
         if nom != [["Entraînement"]]:
-            inscrit = wks.get_values("B17", "B40")  # récupère les inscrits
-            role = wks.get_values("C17", "C40")  # recupère les roles
-            commentaire = wks.get_values("D17", "D40")  # recupère les commentaires
+            inscrit = wks.get_values("B17", "B56")  # récupère les inscrits
+            role = wks.get_values("C17", "C56")  # recupère les roles
+            commentaire = wks.get_values("D17", "D56")  # recupère les commentaires
         else:
             inscrit = wks.get_values("B8", "B31")  # récupère les inscrits
             role = wks.get_values("C8", "C31")  # recupère les roles
@@ -192,13 +192,9 @@ def remove(user, jour):
                         commentaire[i] = [""]  # supprime son commentaire
 
             if nom != [["Entraînement"]]:
-                wks.update_values(
-                    "B17:B40", inscrit
-                )  # met à jour la liste des inscrits
-                wks.update_values("C17:C40", role)  # met à jour la liste des roles
-                wks.update_values(
-                    "D17:D40", commentaire
-                )  # met à jour la liste des commentaires
+                wks.update_values("B17:B56", inscrit)  # met à jour la liste des inscrits
+                wks.update_values("C17:C56", role)  # met à jour la liste des roles
+                wks.update_values("D17:D56", commentaire)  # met à jour la liste des commentaires
             else:
                 wks.update_values("B8:B31", inscrit)  # met à jour la liste des inscrits
                 wks.update_values("C8:C31", role)  # met à jour la liste des roles
