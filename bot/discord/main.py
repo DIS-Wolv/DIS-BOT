@@ -401,11 +401,12 @@ async def on_raw_reaction_add(payload):
     message = await channel.fetch_message(
         payload.message_id
     )  # récupère le message en question
-    # print(message.reactions)
+    # print(message.reactions[0].users())
+    # reaction = message.reactions[0]
+    # async for user in reaction.users():
+    #     print(f'{user} has reacted with {reaction.emoji}!')
 
-    if (
-        payload.channel_id == secrets.CHANNEL_ID and str(user.id) != secrets.CLIENT_ID
-    ):  # si la réaction est dans le channel souhaité
+    if (payload.channel_id == secrets.CHANNEL_ID and str(user.id) != secrets.CLIENT_ID):  # si la réaction est dans le channel souhaité
         # print(payload.emoji.id)
         jour = utils.jour(message.content)  # recupère le jour du message
         # print(user.display_name, "a réagit : ", payload.emoji)
@@ -414,9 +415,7 @@ async def on_raw_reaction_add(payload):
         ):  # si l'emote est une des emotes souhaitées et qu'il y a un jour sur le message
             # print(payload.emoji.id)
             log("  appelInscription")
-            await appelInscription(
-                user, payload.emoji.id, jour
-            )  # appel la fonction pour incrire l'utilisateur
+            await appelInscription(user, payload.emoji.id, jour)  # appel la fonction pour incrire l'utilisateur
             log("  end appelInscription")
 
         if str(payload.emoji) == str("❌") and jour != 0:
@@ -445,9 +444,7 @@ async def on_raw_reaction_add(payload):
                     + "`"
                 )
 
-            if (
-                str(user.id) != secrets.CLIENT_ID and err != ""
-            ):  # si l'utilisateur n'est pas le bot
+            if (str(user.id) != secrets.CLIENT_ID and err != ""):  # si l'utilisateur n'est pas le bot
                 # await user.send(msg)  # mp la personne avec le message
                 logchannel = bot.get_channel(secrets.LOG_CHANNEL_ID)
                 await logchannel.send(err)
@@ -457,12 +454,7 @@ async def on_raw_reaction_add(payload):
     test0 = utils.mots(message.content, "SONDAGE")
     test1 = utils.mots(message.content, "RÉACTION")
     test2 = utils.mots(message.content, "DLC")
-    if (
-        test0 != -1
-        and test1 != -1
-        and test2 != -1
-        and str(user.id) != secrets.CLIENT_ID
-    ):
+    if (test0 != -1 and test1 != -1 and test2 != -1 and str(user.id) != secrets.CLIENT_ID):
         await appelDLC(user, payload.emoji.id, 1)
     log("end on_raw_reaction_add")
 
@@ -602,9 +594,7 @@ async def on_raw_reaction_remove(payload):
     )  # récupère le message en question
     # print(payload.emoji)
 
-    if (
-        payload.channel_id == secrets.CHANNEL_ID
-    ):  # si la réaction est dans le channel souhaité
+    if (payload.channel_id == secrets.CHANNEL_ID):  # si la réaction est dans le channel souhaité
         # print(payload.emoji.id)
         # print (payload.emoji.id, type(payload.emoji.id))
 
@@ -653,13 +643,15 @@ async def on_raw_reaction_remove(payload):
     test0 = utils.mots(message.content, "SONDAGE")
     test1 = utils.mots(message.content, "RÉACTION")
     test2 = utils.mots(message.content, "DLC")
-    if (
-        test0 != -1
-        and test1 != -1
-        and test2 != -1
-        and str(user.id) != secrets.CLIENT_ID
-    ):
+    if (test0 != -1 and test1 != -1 and test2 != -1 and str(user.id) != secrets.CLIENT_ID):
         await appelDLC(user, payload.emoji.id, 0)
+        # print(message.reactions[0].users())
+        reactions = message.reactions
+        for reaction in reactions:
+            async for user in reaction.users():
+                if str(user.id) != secrets.CLIENT_ID:
+                    await appelDLC(user, reaction.emoji, 1)
+                    # print(f'{user} has reacted with {reaction.emoji}!')
 
 
 # est appellé par l'ajout ou la suppresion de reaction
