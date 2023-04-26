@@ -558,7 +558,7 @@ async def appelDLC(user, emote, state):
             + str(user.id)
             + "`) n'es pas dans la fiche Technique."
         )
-        inscription.addUser(user.display_name, str(user.id))
+        # inscription.addUser(user.display_name, str(user.id))
         err += (
             '\n:white_check_mark: Ajout de "'
             + user.display_name
