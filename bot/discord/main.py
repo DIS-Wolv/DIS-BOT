@@ -456,6 +456,17 @@ async def on_raw_reaction_add(payload):
     test2 = utils.mots(message.content, "DLC")
     if (test0 != -1 and test1 != -1 and test2 != -1 and str(user.id) != secrets.CLIENT_ID):
         await appelDLC(user, payload.emoji.id, 1)
+        # print(message.reactions[0].users())
+        reactions = message.reactions
+        for reaction in reactions:
+            async for user in reaction.users():
+                if str(user.id) != secrets.CLIENT_ID and reaction.emoji.id == payload.emoji.id:
+                    if user in guild.members:
+                        await appelDLC(user, reaction.emoji.id, 1)
+                        # print(f'{user} a le dlc {reaction.emoji}!')
+                    else:
+                        await reaction.remove(user)
+
     log("end on_raw_reaction_add")
 
 
@@ -643,17 +654,6 @@ async def on_raw_reaction_remove(payload):
     test2 = utils.mots(message.content, "DLC")
     if (test0 != -1 and test1 != -1 and test2 != -1 and str(user.id) != secrets.CLIENT_ID):
         await appelDLC(user, payload.emoji.id, 0)
-        # print(message.reactions[0].users())
-        reactions = message.reactions
-        for reaction in reactions:
-            async for user in reaction.users():
-                if str(user.id) != secrets.CLIENT_ID and reaction.emoji.id == payload.emoji.id:
-                    if user in guild.members:
-                        await appelDLC(user, reaction.emoji.id, 1)
-                        # print(f'{user} a le dlc {reaction.emoji}!')
-                    else:
-                        await reaction.remove(user)
-
 
 # est appellé par l'ajout ou la suppresion de reaction
 # met a jour le message
