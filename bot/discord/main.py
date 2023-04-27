@@ -457,16 +457,16 @@ async def on_raw_reaction_add(payload):
     if (test0 != -1 and test1 != -1 and test2 != -1 and str(user.id) != secrets.CLIENT_ID):
         await appelDLC(user, payload.emoji.id, 1)
         # print(message.reactions[0].users())
-        reactions = message.reactions
-        for reaction in reactions:
-            if reaction.emoji.id == payload.emoji.id:
-                async for user in reaction.users():
-                    if str(user.id) != secrets.CLIENT_ID:
-                        if user in guild.members:
-                            await appelDLC(user, reaction.emoji.id, 1)
-                            # print(f'{user} a le dlc {reaction.emoji}!')
-                        else:
-                            await reaction.remove(user)
+        # reactions = message.reactions # TODO optimiser tout ca qui permet de mettre a jours toute les DLC
+        # for reaction in reactions:
+        #     if reaction.emoji.id == payload.emoji.id:
+        #         async for user in reaction.users():
+        #             if str(user.id) != secrets.CLIENT_ID:
+        #                 if user in guild.members:
+        #                     await appelDLC(user, reaction.emoji.id, 1)
+        #                     # print(f'{user} a le dlc {reaction.emoji}!')
+        #                 else:
+        #                     await reaction.remove(user)
 
     log("end on_raw_reaction_add")
 
