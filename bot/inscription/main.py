@@ -269,46 +269,48 @@ def clearJoueur(jour):
     print("Nettoyage des inscrit de la page", page, "correspondant à", jourNom[jour])
     wks = sh[page]  # ouvre la page correspondante
 
-    liste15 = [
-        [""],
-        [""],
-        [""],
-        [""],
-        [""],
-        [""],
-        [""],
-        [""],
-        [""],
-        [""],
-        [""],
-        [""],
-        [""],
-        [""],
-        [""],
-    ]  # crée une liste vide
+    liste15 = [[""],[""],[""],[""],[""],[""],[""],[""],[""],[""],[""],[""],[""],[""],[""]]  # crée une liste vide
     liste10 = [[""], [""], [""], [""], [""], [""], [""], [""], [""], [""]]
 
     nom = wks.get_values("D1", "D2")  # lit le titre
     if nom != [["Entraînement"]]:
         # liste des joueurs
-        wks.update_values("B17:B32", liste15)
-        wks.update_values("B32:B47", liste10)
+        wks.update_values("B17:B27", liste10)
+        wks.update_values("B27:B37", liste10)
+        wks.update_values("B37:B47", liste10)
+        wks.update_values("B47:B57", liste10)
+        wks.update_values("B57:B67", liste10)
+
         # liste des roles
-        wks.update_values("C17:C32", liste15)
-        wks.update_values("C32:C47", liste10)
+        wks.update_values("C17:C27", liste10)
+        wks.update_values("C27:C37", liste10)
+        wks.update_values("C37:C47", liste10)
+        wks.update_values("C47:C57", liste10)
+        wks.update_values("C57:C67", liste10)
+
         # liste des comantaires
-        wks.update_values("D17:D32", liste15)
-        wks.update_values("D32:D47", liste10)
+        wks.update_values("D17:D27", liste10)
+        wks.update_values("D27:D37", liste10)
+        wks.update_values("D37:D47", liste10)
+        wks.update_values("D47:D57", liste10)
+        wks.update_values("D57:D67", liste10)
+
 
         # sanglier
         wks.update_values("G19:G33", liste15)
         # grizzli
         wks.update_values("J19:J33", liste15)
+        # Taureau
+        wks.update_values("M19:M33", liste15)
 
         # Albatros
-        wks.update_values("M21:M24", [[""], [""], [""], [""]])
+        wks.update_values("J44:J47", [[""], [""], [""], [""]])
         # Harfang
-        wks.update_values("M27:M30", [[""], [""], [""], [""]])
+        wks.update_values("G44:G47", [[""], [""], [""], [""]])
+
+        # Coyote
+        wks.update_values("M8:M14", [[""], [""], [""], [""], [""], [""], [""]])
+
 
         # CROCODILE
         wks.update_values("G37:G39", [[""], [""], [""]])
@@ -393,22 +395,27 @@ def message(jour):
         orga(jour)
         log("message -- orga [done]")
         log("message -- fetch groups")
-        data = wks.get_values("A1", "O44", include_tailing_empty_rows=True)
+        data = wks.get_values("A1", "O68", include_tailing_empty_rows=True)
 
-        inscrit = slice_in_matrix(data, 1, 2, 16, 40)  # B17 -> 40
-        role = slice_in_matrix(data, 2, 3, 16, 40)  # C17 -> 40
-        commentaire = slice_in_matrix(data, 3, 4, 16, 40)  # D17 -> 40
+        inscrit = slice_in_matrix(data, 1, 2, 16, 67)  # B17 -> 67
+        role = slice_in_matrix(data, 2, 3, 16, 67)  # C17 -> 67
+        commentaire = slice_in_matrix(data, 3, 4, 16, 67)  # D17 -> 67
 
         Sanglier = slice_in_matrix(data, 6, 7, 18, 33)  # G19 -> 33
-        Crocodile = slice_in_matrix(data, 6, 7, 36, 39)  # G37 -> 39
         Grizzli = slice_in_matrix(data, 9, 10, 18, 33)  # J19 -> 33
+        Taureau = slice_in_matrix(data, 12, 13, 18, 33) # M19 -> 33
+
+        Coyote = slice_in_matrix(data, 12, 13, 7, 14)   # M8 -> 14
+
+        Crocodile = slice_in_matrix(data, 6, 7, 36, 39)  # G37 -> 39
         Aligator = slice_in_matrix(data, 9, 10, 36, 39)  # J37 -> 39
-        Albatros = slice_in_matrix(data, 12, 13, 20, 24)  # M21 -> 24
-        Harfang = slice_in_matrix(data, 12, 13, 26, 30)  # M27 -> 30
+        
+        Harfang = slice_in_matrix(data, 6, 7, 43, 47)    # G44 -> 47
+        Albatros = slice_in_matrix(data, 9, 10, 43, 45)  # J44 -> 45
         log("message -- fetch groups [done]")
 
         log("message -- build_message")
-        msg = build_msg(dico, jour, name, zeus, brief, inscrit, role, commentaire, Sanglier, Crocodile, Grizzli, Aligator, Albatros, Harfang)
+        msg = build_msg(dico, jour, name, zeus, brief, inscrit, role, commentaire, Sanglier, Grizzli, Taureau, Coyote, Crocodile, Aligator, Albatros, Harfang)
         log("message -- build_message [done]")
 
     log("message [done]")
