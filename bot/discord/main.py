@@ -459,13 +459,14 @@ async def on_raw_reaction_add(payload):
         # print(message.reactions[0].users())
         reactions = message.reactions
         for reaction in reactions:
-            async for user in reaction.users():
-                if str(user.id) != secrets.CLIENT_ID and reaction.emoji.id == payload.emoji.id:
-                    if user in guild.members:
-                        await appelDLC(user, reaction.emoji.id, 1)
-                        # print(f'{user} a le dlc {reaction.emoji}!')
-                    else:
-                        await reaction.remove(user)
+            if reaction.emoji.id == payload.emoji.id:
+                async for user in reaction.users():
+                    if str(user.id) != secrets.CLIENT_ID:
+                        if user in guild.members:
+                            await appelDLC(user, reaction.emoji.id, 1)
+                            # print(f'{user} a le dlc {reaction.emoji}!')
+                        else:
+                            await reaction.remove(user)
 
     log("end on_raw_reaction_add")
 
