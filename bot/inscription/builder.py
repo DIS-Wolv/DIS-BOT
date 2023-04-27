@@ -17,7 +17,7 @@ def build_msg(dico, jour, name, zeus, brief, inscrit, role, commentaire, Sanglie
         + " soir, à 20h45, voici le briefing : ```"
         + brief[0][0]
         + "\n```Inscrivez vous en réagissant ou directement sur le planning : "
-        + secrets.LINKS[jour]
+        # + secrets.LINKS[jour]
     )
 
     Sanglier += [[""], [""], [""], [""], [""], [""], [""], [""], [""], [""], [""], [""], [""], [""],]
