@@ -653,7 +653,6 @@ async def on_raw_reaction_remove(payload):
                         # print(f'{user} a le dlc {reaction.emoji}!')
                     else:
                         await reaction.remove(user)
-                time.sleep (0.5)
 
 
 # est appellé par l'ajout ou la suppresion de reaction
