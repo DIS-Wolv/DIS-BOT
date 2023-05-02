@@ -410,15 +410,13 @@ async def on_raw_reaction_add(payload):
         # print(payload.emoji.id)
         jour = utils.jour(message.content)  # recupère le jour du message
         # print(user.display_name, "a réagit : ", payload.emoji)
-        if (
-            payload.emoji.id in emote and jour != 0
-        ):  # si l'emote est une des emotes souhaitées et qu'il y a un jour sur le message
+        if (payload.emoji.id in emote and jour != 0):  # si l'emote est une des emotes souhaitées et qu'il y a un jour sur le message
             # print(payload.emoji.id)
             log("  appelInscription")
             await appelInscription(user, payload.emoji.id, jour)  # appel la fonction pour incrire l'utilisateur
             log("  end appelInscription")
 
-        if str(payload.emoji) == str("❌") and jour != 0:
+        elif str(payload.emoji) == str("❌") and jour != 0:
             print("desinscription")
             statut = inscription.remove(user.id, jour)  # éssaye désinscrire la personne
 
@@ -448,6 +446,15 @@ async def on_raw_reaction_add(payload):
                 # await user.send(msg)  # mp la personne avec le message
                 logchannel = bot.get_channel(secrets.LOG_CHANNEL_ID)
                 await logchannel.send(err)
+
+        # TODO optimiser tout ca
+        elif jour != 0:     #si la réaction est une reaction non pris en charge
+            reactions = message.reactions # recupère toute les reaction
+            for reaction in reactions:      # pour chaque reactions
+                if reaction.emoji.id in emote:   # si elle est dans les reactions d'inscription
+                    async for user in reaction.users(): # pour chaque user qui on reagit
+                        if str(user.id) != secrets.CLIENT_ID:   # si ce n'est pas le bot
+                            await appelInscription(user, reaction.emoji.id, jour)   # (re)inscrit le joueur
 
         await updateMessage(message)  # met a jour la liste des inscrits
 
