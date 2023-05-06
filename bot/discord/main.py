@@ -448,13 +448,14 @@ async def on_raw_reaction_add(payload):
                 await logchannel.send(err)
 
         # TODO optimiser tout ca
-        # elif jour != 0:     #si la réaction est une reaction non pris en charge
-        #     reactions = message.reactions # recupère toute les reaction
-        #     for reaction in reactions:      # pour chaque reactions
-        #         if reaction.emoji.id in emote:   # si elle est dans les reactions d'inscription
-        #             async for user in reaction.users(): # pour chaque user qui on reagit
-        #                 if str(user.id) != secrets.CLIENT_ID:   # si ce n'est pas le bot
-        #                     await appelInscription(user, reaction.emoji.id, jour)   # (re)inscrit le joueur
+        elif str(payload.emoji) == str("🔄") and jour != 0:     #si la réaction est une reaction non pris en charge
+            reactions = message.reactions # recupère toute les reaction
+            for reaction in reactions:      # pour chaque reactions
+                if type(reaction.emoji) != str:
+                    if reaction.emoji.id in emote:   # si elle est dans les reactions d'inscription
+                        async for user in reaction.users(): # pour chaque user qui on reagit
+                            if str(user.id) != secrets.CLIENT_ID:   # si ce n'est pas le bot
+                                await appelInscription(user, reaction.emoji.id, jour)   # (re)inscrit le joueur
 
         await updateMessage(message)  # met a jour la liste des inscrits
 
