@@ -449,6 +449,7 @@ async def on_raw_reaction_add(payload):
 
         # TODO optimiser tout ca
         elif str(payload.emoji) == str("🔄") and jour != 0:     #si la réaction est une reaction non pris en charge
+            log("  majInscrit")
             reactions = message.reactions # recupère toute les reaction
             for reaction in reactions:      # pour chaque reactions
                 if type(reaction.emoji) != str:
@@ -456,6 +457,7 @@ async def on_raw_reaction_add(payload):
                         async for user in reaction.users(): # pour chaque user qui on reagit
                             if str(user.id) != secrets.CLIENT_ID:   # si ce n'est pas le bot
                                 await appelInscription(user, reaction.emoji.id, jour)   # (re)inscrit le joueur
+            log("  end majInscrit")
 
         await updateMessage(message)  # met a jour la liste des inscrits
 
