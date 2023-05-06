@@ -560,7 +560,7 @@ def build_msg(dico, jour, name, zeus, brief, inscrit, role, commentaire, Sanglie
         if inscrit[i] != [""] and affecter == False:
             if role [i][0] == "CDS":
                 msg += "\n\t<:cds:" + str(secrets.CDS_EMOTE_ID) + "> "
-                if UserToID(zeus[0][0], dico) != False:
+                if UserToID(inscrit[i][0], dico) != False:
                     msg += "<@" + UserToID(inscrit[i][0], dico) + ">"
                 else:
                     msg += inscrit[i][0]
@@ -569,7 +569,7 @@ def build_msg(dico, jour, name, zeus, brief, inscrit, role, commentaire, Sanglie
                     if commentaire[i][0] != "":msg += " (" + commentaire[i][0] + ")"
             elif role[i][0] == "CDG":
                 msg += "\n\t<:cdg:" + str(secrets.CDG_EMOTE_ID) + "> "
-                if UserToID(zeus[0][0], dico) != False:
+                if UserToID(inscrit[i][0], dico) != False:
                     msg += "<@" + UserToID(inscrit[i][0], dico) + ">"
                 else:
                     msg += inscrit[i][0]
@@ -578,7 +578,7 @@ def build_msg(dico, jour, name, zeus, brief, inscrit, role, commentaire, Sanglie
                     if commentaire[i][0] != "":msg += " (" + commentaire[i][0] + ")"
             elif role[i][0] == "CDE":
                 msg += "\n\t<:cde:" + str(secrets.CDE_EMOTE_ID) + "> "
-                if UserToID(zeus[0][0], dico) != False:
+                if UserToID(inscrit[i][0], dico) != False:
                     msg += "<@" + UserToID(inscrit[i][0], dico) + ">"
                 else:
                     msg += inscrit[i][0]
@@ -587,7 +587,7 @@ def build_msg(dico, jour, name, zeus, brief, inscrit, role, commentaire, Sanglie
                     if commentaire[i][0] != "":msg += " (" + commentaire[i][0] + ")"
             elif role[i][0] == "Médecin":
                 msg += "\n\t<:medecin:" + str(secrets.MED_EMOTE_ID) + "> "
-                if UserToID(zeus[0][0], dico) != False:
+                if UserToID(inscrit[i][0], dico) != False:
                     msg += "<@" + UserToID(inscrit[i][0], dico) + ">"
                 else:
                     msg += inscrit[i][0]
@@ -596,7 +596,7 @@ def build_msg(dico, jour, name, zeus, brief, inscrit, role, commentaire, Sanglie
                     if commentaire[i][0] != "":msg += " (" + commentaire[i][0] + ")"
             elif role[i][0] == "Minimi":
                 msg += "\n\t<:mg:" + str(secrets.MINI_EMOTE_ID) + "> "
-                if UserToID(zeus[0][0], dico) != False:
+                if UserToID(inscrit[i][0], dico) != False:
                     msg += "<@" + UserToID(inscrit[i][0], dico) + ">"
                 else:
                     msg += inscrit[i][0]
@@ -605,7 +605,7 @@ def build_msg(dico, jour, name, zeus, brief, inscrit, role, commentaire, Sanglie
                     if commentaire[i][0] != "":msg += " (" + commentaire[i][0] + ")"
             elif role[i][0] == "GV":
                 msg += "\n\t<:DIS:" + str(secrets.DIS_EMOTE_ID) + "> "
-                if UserToID(zeus[0][0], dico) != False:
+                if UserToID(inscrit[i][0], dico) != False:
                     msg += "<@" + UserToID(inscrit[i][0], dico) + ">"
                 else:
                     msg += inscrit[i][0]
@@ -614,7 +614,7 @@ def build_msg(dico, jour, name, zeus, brief, inscrit, role, commentaire, Sanglie
                     if commentaire[i][0] != "":msg += " (" + commentaire[i][0] + ")"
             else:
                 msg += "\n\t<:DIS:" + str(secrets.DIS_EMOTE_ID) + "> "
-                if UserToID(zeus[0][0], dico) != False:
+                if UserToID(inscrit[i][0], dico) != False:
                     msg += "<@" + UserToID(inscrit[i][0], dico) + ">"
                 else:
                     msg += inscrit[i][0]
