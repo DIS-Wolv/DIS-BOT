@@ -49,7 +49,7 @@ def stateDLC(user, dlc, state):
         return -1
 
 
-def add(user: int, jour, rolevoulue=[""]):
+def add(user: int, jour, rolevoulue = None):
     """
     est appellé par le bot
     incrit l'utilisateur avec le role souhaité au jour demandé
@@ -59,6 +59,9 @@ def add(user: int, jour, rolevoulue=[""]):
     - 1 si succes
     - 2 si echec
     """
+    if rolevoulue is None:
+        rolevoulue = []
+        
     dico = init()  # initialise dico
     user = str(user)  # récupère l'id de l'utilisateur
 
