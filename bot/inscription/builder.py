@@ -373,10 +373,10 @@ def build_msg(dico, jour, name, zeus, brief, inscrit, role, commentaire, Sanglie
             msg += "\n*Blanc :*"  # Blanc
             if Coyote[0] != [""]:
                 if UserToID(Coyote[0][0], dico) != False:
-                    msg += ("\n\t<:cdg:"+ str(secrets.CDG_EMOTE_ID)+ ">\t<@"+ UserToID(Coyote[0][0], dico)+ ">"
+                    msg += ("\n\t<:cds:"+ str(secrets.CDS_EMOTE_ID)+ ">\t<@"+ UserToID(Coyote[0][0], dico)+ ">"
                     )
                 else:
-                    msg += ("\n\t<:cdg:"+ str(secrets.CDG_EMOTE_ID)+ ">\t"+ Coyote[0][0]
+                    msg += ("\n\t<:cds:"+ str(secrets.CDS_EMOTE_ID)+ ">\t"+ Coyote[0][0]
                     )
 
             if Coyote[1] != [""]:
