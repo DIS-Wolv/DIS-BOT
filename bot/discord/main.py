@@ -420,7 +420,7 @@ async def on_raw_reaction_add(payload):
         elif str(payload.emoji) == str("❌") and jour != 0:
             print("desinscription")
             statut = inscription.remove(user.id, jour)  # éssaye désinscrire la personne
-            await message.remove_reaction(payload.emoji, user)
+            # await message.remove_reaction(payload.emoji, user)
 
             if statut == 0:
                 err = ""
