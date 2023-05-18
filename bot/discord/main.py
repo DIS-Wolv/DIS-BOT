@@ -404,7 +404,7 @@ async def on_raw_reaction_add(payload):
     # print(message.reactions[0].users())
     # reaction = message.reactions[0]
     # async for user in reaction.users():
-    #     print(f'{user} has reacted with {reaction.emoji}!')
+    # print(f'{user} has reacted with {payload.emoji}!')
 
     if (payload.channel_id == secrets.CHANNEL_ID and str(user.id) != secrets.CLIENT_ID):  # si la réaction est dans le channel souhaité
         # print(payload.emoji.id)
@@ -415,10 +415,12 @@ async def on_raw_reaction_add(payload):
             log("  appelInscription")
             await appelInscription(user, payload.emoji.id, jour)  # appel la fonction pour incrire l'utilisateur
             log("  end appelInscription")
+            await message.remove_reaction(payload.emoji, user)
 
         elif str(payload.emoji) == str("❌") and jour != 0:
             print("desinscription")
             statut = inscription.remove(user.id, jour)  # éssaye désinscrire la personne
+            await message.remove_reaction(payload.emoji, user)
 
             if statut == 0:
                 err = ""
@@ -454,10 +456,12 @@ async def on_raw_reaction_add(payload):
             for reaction in reactions:      # pour chaque reactions
                 if type(reaction.emoji) != str:
                     if reaction.emoji.id in emote:   # si elle est dans les reactions d'inscription
-                        async for user in reaction.users(): # pour chaque user qui on reagit
-                            if str(user.id) != secrets.CLIENT_ID:   # si ce n'est pas le bot
-                                await appelInscription(user, reaction.emoji.id, jour)   # (re)inscrit le joueur
+                        async for u in reaction.users(): # pour chaque user qui on reagit
+                            if str(u.id) != secrets.CLIENT_ID:   # si ce n'est pas le bot
+                                await appelInscription(u, reaction.emoji.id, jour)   # (re)inscrit le joueur
+                                await message.remove_reaction(reaction.emoji, u)
             log("  end majInscrit")
+            await message.remove_reaction(payload.emoji, user)
 
         await updateMessage(message)  # met a jour la liste des inscrits
 
@@ -614,51 +618,51 @@ async def on_raw_reaction_remove(payload):
     )  # récupère le message en question
     # print(payload.emoji)
 
-    if (payload.channel_id == secrets.CHANNEL_ID):  # si la réaction est dans le channel souhaité
-        # print(payload.emoji.id)
-        # print (payload.emoji.id, type(payload.emoji.id))
+    # if (payload.channel_id == secrets.CHANNEL_ID):  # si la réaction est dans le channel souhaité
+    #     # print(payload.emoji.id)
+    #     # print (payload.emoji.id, type(payload.emoji.id))
 
-        if payload.emoji.id in emote:  # si l'emote est une des emotes souhaitées
-            jour = utils.jour(message.content)  # recupère le jour du message
-            # print(user.display_name, "a supprimé : ", payload.emoji)
-            statut = inscription.remove(user.id, jour)  # éssaye désinscrire la personne
+    #     if payload.emoji.id in emote:  # si l'emote est une des emotes souhaitées
+    #         jour = utils.jour(message.content)  # recupère le jour du message
+    #         # print(user.display_name, "a supprimé : ", payload.emoji)
+    #         statut = inscription.remove(user.id, jour)  # éssaye désinscrire la personne
 
-            err = ""
-            # assigne a msg une valeur suivant le resultat de l'incription
-            if statut == 0:
-                msg = ""  # "Vous êtes déjà désinscrit"
-            elif statut == 1:
-                msg = ""  # "Vous avez été désinscrit avec succès"
-            elif statut == 2:
-                msg = ""  # "Vous n'avez pas pu être désinscrit contacter @Wolv#2393 ou un Instructeur"
-                err = (
-                    user.display_name
-                    + " (Id = `"
-                    + str(user.id)
-                    + "`) n'a pas pu etre désinscrit"
-                )
-            elif statut == -1:
-                msg = ""
-                err = ""
-            else:
-                msg = "ERREUR contacter @Wolv#2393 ou un Instructeur"
-                err = (
-                    "ERREUR Inscription : "
-                    + user.display_name
-                    + " id `"
-                    + str(user.id)
-                    + "`"
-                )
+    #         err = ""
+    #         # assigne a msg une valeur suivant le resultat de l'incription
+    #         if statut == 0:
+    #             msg = ""  # "Vous êtes déjà désinscrit"
+    #         elif statut == 1:
+    #             msg = ""  # "Vous avez été désinscrit avec succès"
+    #         elif statut == 2:
+    #             msg = ""  # "Vous n'avez pas pu être désinscrit contacter @Wolv#2393 ou un Instructeur"
+    #             err = (
+    #                 user.display_name
+    #                 + " (Id = `"
+    #                 + str(user.id)
+    #                 + "`) n'a pas pu etre désinscrit"
+    #             )
+    #         elif statut == -1:
+    #             msg = ""
+    #             err = ""
+    #         else:
+    #             msg = "ERREUR contacter @Wolv#2393 ou un Instructeur"
+    #             err = (
+    #                 "ERREUR Inscription : "
+    #                 + user.display_name
+    #                 + " id `"
+    #                 + str(user.id)
+    #                 + "`"
+    #             )
 
-            if (
-                str(user.id) != secrets.CLIENT_ID and err != ""
-            ):  # si l'utilisateur n'est pas le bot
-                # await user.send(msg)  # mp la personne avec le message
-                logchannel = bot.get_channel(secrets.LOG_CHANNEL_ID)
-                await logchannel.send(err)
+    #         if (
+    #             str(user.id) != secrets.CLIENT_ID and err != ""
+    #         ):  # si l'utilisateur n'est pas le bot
+    #             # await user.send(msg)  # mp la personne avec le message
+    #             logchannel = bot.get_channel(secrets.LOG_CHANNEL_ID)
+    #             await logchannel.send(err)
 
-            # sleep(5)
-        await updateMessage(message)  # met a jour la liste des inscrits
+    #         # sleep(5)
+    #     await updateMessage(message)  # met a jour la liste des inscrits
 
     test0 = utils.mots(message.content, "SONDAGE")
     test1 = utils.mots(message.content, "RÉACTION")
