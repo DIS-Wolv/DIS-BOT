@@ -89,37 +89,42 @@ def add(user: int, jour, rolevoulue = None):
         while len(inscrit) > len(role):
             role.append(["GV"])
 
+        ins = True  # défini l'utilisateur comme à inscrire
         # test si l'utilisateur est deja inscrit
         if usern in inscrit:  # si l'utilisateur est inscrit
-            return 0  # sort de la fonction
-        else:  # sinon
+            ins = False
+        #     return 0  # sort de la fonction
 
-            ins = True  # défini l'utilisateur comme à inscrire
-            # cherche une place dans la liste des inscrits
-            for i in range(len(inscrit)):  # pour chaque élément des inscrits
+        # cherche une place dans la liste des inscrits
+        for i in range(len(inscrit)):  # pour chaque élément des inscrits
+            print(inscrit[i], usern, inscrit[i] == usern)
+            if ins:  # si l'utilisateur est a inscrire
                 if inscrit[i] == [""]:  # si il y a une place
-                    if ins:  # si l'utilisateur est a inscrire
-                        inscrit[i] = usern  # inscrit l'utilisateur
-                        role[i] = rolevoulue  # defini son role
-                        ins = False  # défini l'utilisateur comme inscrit
-
-            # si pas de place, se rajoute a la fin
-            if ins:  # si utilisateur toujours a inscrire
-                inscrit.append(usern)  # ajoute l'utilisateur a la fin
-                role.append(rolevoulue)  # defini son role
-
-            # print(inscrit, role)
-            if nom != [["Entraînement"]]:
-                wks.update_values("B17:B56", inscrit)  # met à jour le google sheet
-                wks.update_values("C17:C56", role)  # met à jour la liste des roles
+                    inscrit[i] = usern  # inscrit l'utilisateur
+                    role[i] = rolevoulue  # defini son role
+                    ins = False  # défini l'utilisateur comme inscrit
             else:
-                wks.update_values("B8:B31", inscrit)  # met à jour le google sheet
-                wks.update_values("C8:C31", role)  # met à jour la liste des roles
+                if inscrit[i] == usern:
+                    role[i] = rolevoulue
 
-            # print("utilisateur inscrit")
-            date(user)
 
-            return 1  # sort de la fonction
+        # si pas de place, se rajoute a la fin
+        if ins:  # si utilisateur toujours a inscrire
+            inscrit.append(usern)  # ajoute l'utilisateur a la fin
+            role.append(rolevoulue)  # defini son role
+
+        # print(inscrit, role)
+        if nom != [["Entraînement"]]:
+            wks.update_values("B17:B56", inscrit)  # met à jour le google sheet
+            wks.update_values("C17:C56", role)  # met à jour la liste des roles
+        else:
+            wks.update_values("B8:B31", inscrit)  # met à jour le google sheet
+            wks.update_values("C8:C31", role)  # met à jour la liste des roles
+
+        # print("utilisateur inscrit")
+        date(user)
+
+        return 1  # sort de la fonction
     else:
         # print("Erreur : user n'est pas dans le dico")
         return 2  # sort de la fonction
