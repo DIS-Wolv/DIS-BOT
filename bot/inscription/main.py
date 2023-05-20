@@ -97,7 +97,7 @@ def add(user: int, jour, rolevoulue = None):
 
         # cherche une place dans la liste des inscrits
         for i in range(len(inscrit)):  # pour chaque élément des inscrits
-            print(inscrit[i], usern, inscrit[i] == usern)
+            # print(inscrit[i], usern, inscrit[i] == usern)
             if ins:  # si l'utilisateur est a inscrire
                 if inscrit[i] == [""]:  # si il y a une place
                     inscrit[i] = usern  # inscrit l'utilisateur
