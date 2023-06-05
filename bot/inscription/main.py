@@ -140,6 +140,11 @@ def date(user):
     pos = dico[1].index(user)
     tech = sh[10]
     Date = tech.get_values("O8", "O200")
+    
+    if len(Date) < len(dico[1]):
+        while len(Date) < len(dico[1]):
+            Date.append([''])
+        
     Date[pos] = [
         str(datetime.now().day)
         + "/"
