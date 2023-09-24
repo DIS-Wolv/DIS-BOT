@@ -8,26 +8,22 @@ def init():
     """
     est appellé pour initialiser dico
     retourne dico
+
+    dico = [
+        [["pseudo1"], ["pseudo2"]],
+        ["ID1", "ID2"]
+    ]
     """
-    # selection de la fiche technique
-    wks = sh[10]
-    # création et complétion du dico
-    dico = ["nom", "ID"]
+    dico = [[], []]
 
-    read = wks.get_values("B8", "C600")  # lit les pseudos
-    trace.get_current_span().set_attribute("all", str(read))
+    # lis dans Technique
+    read = sh[10].get_values("B8", "C600")
 
-    read = wks.get_values("B8", "B600")  # lit les pseudos
-    trace.get_current_span().set_attribute("pseudos", str(read))
-    dico[0] = read  # met les pseudos dans la première colonne de dico
+    for line in read:
+        # each line is ["pseudo", "id"]
+        dico[0].append([line[0]])
+        dico[1].append(line[1])
 
-    read = wks.get_values("C8", "C600")  # lis les ID
-    trace.get_current_span().set_attribute("ids", str(read))
-    for i in range(0, len(read)):
-        read[i] = read[i][0]
-    dico[1] = read  # met les IDs dans la 2e colonne de dico
-    # print("dico initialisé")
-    # print(dico)
     return dico
 
 
