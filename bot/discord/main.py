@@ -1,8 +1,6 @@
 import discord
-from discord.ext import tasks
-from discord.ext import commands
+from discord.ext.tasks import loop
 from datetime import datetime
-import time
 import random
 
 # ressource
@@ -406,14 +404,20 @@ async def on_raw_reaction_add(payload):
     # async for user in reaction.users():
     # print(f'{user} has reacted with {payload.emoji}!')
 
-    if (payload.channel_id == secrets.CHANNEL_ID and str(user.id) != secrets.CLIENT_ID):  # si la réaction est dans le channel souhaité
+    if (
+        payload.channel_id == secrets.CHANNEL_ID and str(user.id) != secrets.CLIENT_ID
+    ):  # si la réaction est dans le channel souhaité
         # print(payload.emoji.id)
         jour = utils.jour(message.content)  # recupère le jour du message
         # print(user.display_name, "a réagit : ", payload.emoji)
-        if (payload.emoji.id in emote and jour != 0):  # si l'emote est une des emotes souhaitées et qu'il y a un jour sur le message
+        if (
+            payload.emoji.id in emote and jour != 0
+        ):  # si l'emote est une des emotes souhaitées et qu'il y a un jour sur le message
             # print(payload.emoji.id)
             log("  appelInscription")
-            await appelInscription(user, payload.emoji.id, jour)  # appel la fonction pour incrire l'utilisateur
+            await appelInscription(
+                user, payload.emoji.id, jour
+            )  # appel la fonction pour incrire l'utilisateur
             log("  end appelInscription")
             await message.remove_reaction(payload.emoji, user)
 
@@ -444,21 +448,29 @@ async def on_raw_reaction_add(payload):
                     + "`"
                 )
 
-            if (str(user.id) != secrets.CLIENT_ID and err != ""):  # si l'utilisateur n'est pas le bot
+            if (
+                str(user.id) != secrets.CLIENT_ID and err != ""
+            ):  # si l'utilisateur n'est pas le bot
                 # await user.send(msg)  # mp la personne avec le message
                 logchannel = bot.get_channel(secrets.LOG_CHANNEL_ID)
                 await logchannel.send(err)
 
         # TODO optimiser tout ca
-        elif str(payload.emoji) == str("🔄") and jour != 0:     #si la réaction est une reaction non pris en charge
+        elif (
+            str(payload.emoji) == str("🔄") and jour != 0
+        ):  # si la réaction est une reaction non pris en charge
             log("  majInscrit")
-            reactions = message.reactions # recupère toute les reaction
-            for reaction in reactions:      # pour chaque reactions
+            reactions = message.reactions  # recupère toute les reaction
+            for reaction in reactions:  # pour chaque reactions
                 if type(reaction.emoji) != str:
-                    if reaction.emoji.id in emote:   # si elle est dans les reactions d'inscription
-                        async for u in reaction.users(): # pour chaque user qui on reagit
-                            if str(u.id) != secrets.CLIENT_ID:   # si ce n'est pas le bot
-                                await appelInscription(u, reaction.emoji.id, jour)   # (re)inscrit le joueur
+                    if (
+                        reaction.emoji.id in emote
+                    ):  # si elle est dans les reactions d'inscription
+                        async for u in reaction.users():  # pour chaque user qui on reagit
+                            if str(u.id) != secrets.CLIENT_ID:  # si ce n'est pas le bot
+                                await appelInscription(
+                                    u, reaction.emoji.id, jour
+                                )  # (re)inscrit le joueur
                                 await message.remove_reaction(reaction.emoji, u)
             log("  end majInscrit")
             await message.remove_reaction(payload.emoji, user)
@@ -468,7 +480,12 @@ async def on_raw_reaction_add(payload):
     test0 = utils.mots(message.content, "SONDAGE")
     test1 = utils.mots(message.content, "RÉACTION")
     test2 = utils.mots(message.content, "DLC")
-    if (test0 != -1 and test1 != -1 and test2 != -1 and str(user.id) != secrets.CLIENT_ID):
+    if (
+        test0 != -1
+        and test1 != -1
+        and test2 != -1
+        and str(user.id) != secrets.CLIENT_ID
+    ):
         await appelDLC(user, payload.emoji.id, 1)
         # print(message.reactions[0].users())
         # reactions = message.reactions # TODO optimiser tout ca qui permet de mettre a jours toute les DLC
@@ -499,15 +516,25 @@ async def appelInscription(user, emote, jour):
     if emote == secrets.DIS_EMOTE_ID:
         statut = inscription.add(user.id, jour, ["GV"])  # essaye d'inscrire la personne
     elif emote == secrets.CDS_EMOTE_ID:
-        statut = inscription.add(user.id, jour, ["CDS"])  # essaye d'inscrire la personne
+        statut = inscription.add(
+            user.id, jour, ["CDS"]
+        )  # essaye d'inscrire la personne
     elif emote == secrets.CDG_EMOTE_ID:
-        statut = inscription.add(user.id, jour, ["CDG"])  # essaye d'inscrire la personne
+        statut = inscription.add(
+            user.id, jour, ["CDG"]
+        )  # essaye d'inscrire la personne
     elif emote == secrets.CDE_EMOTE_ID:
-        statut = inscription.add(user.id, jour, ["CDE"])  # essaye d'inscrire la personne
+        statut = inscription.add(
+            user.id, jour, ["CDE"]
+        )  # essaye d'inscrire la personne
     elif emote == secrets.MED_EMOTE_ID:
-        statut = inscription.add(user.id, jour, ["Médecin"])  # essaye d'inscrire la personne
+        statut = inscription.add(
+            user.id, jour, ["Médecin"]
+        )  # essaye d'inscrire la personne
     elif emote == secrets.MINI_EMOTE_ID:
-        statut = inscription.add(user.id, jour, ["Minimi"])  # essaye d'inscrire la personne
+        statut = inscription.add(
+            user.id, jour, ["Minimi"]
+        )  # essaye d'inscrire la personne
     else:
         statut = inscription.add(user.id, jour)  # essaye d'inscrire la personne
 
@@ -595,7 +622,9 @@ async def appelDLC(user, emote, state):
     else:
         err = "ERREUR Reaction DLC :" + user.display_name + " id `" + str(user.id) + "`"
 
-    if (str(user.id) != secrets.CLIENT_ID and err != ""):  # si l'utilisateur n'est pas le bot
+    if (
+        str(user.id) != secrets.CLIENT_ID and err != ""
+    ):  # si l'utilisateur n'est pas le bot
         await logchannel.send(err)
         await appelDLC(user, emote, state)
 
@@ -667,8 +696,14 @@ async def on_raw_reaction_remove(payload):
     test0 = utils.mots(message.content, "SONDAGE")
     test1 = utils.mots(message.content, "RÉACTION")
     test2 = utils.mots(message.content, "DLC")
-    if (test0 != -1 and test1 != -1 and test2 != -1 and str(user.id) != secrets.CLIENT_ID):
+    if (
+        test0 != -1
+        and test1 != -1
+        and test2 != -1
+        and str(user.id) != secrets.CLIENT_ID
+    ):
         await appelDLC(user, payload.emoji.id, 0)
+
 
 # est appellé par l'ajout ou la suppresion de reaction
 # met a jour le message
@@ -699,7 +734,7 @@ async def updateMessage(msg):
 
 
 # toutes les heures, execute :
-@tasks.loop(hours=1.0)
+@loop(hours=1.0)
 async def loop():
     jourNom = [
         "",
@@ -732,8 +767,8 @@ async def loop():
             await SetActivity("nettoyer le planning")
 
             print(inscription.missionOrgaName(day))
-            
-            if inscription.missionOrgaName(day) == "[DIS] Bot": 
+
+            if inscription.missionOrgaName(day) == "[DIS] Bot":
                 inscription.clearJoueur(day)
                 # supprime le message du jour précédant
                 async for message in channel.history(
@@ -743,7 +778,7 @@ async def loop():
 
                     if jourMsg == day:  # si le message est le message du jour précédant
                         await message.delete()  # supprime le message
-            
+
             elif inscription.missionName(day) == "ODD de la semaine !":
                 inscription.clearJoueur(day)
                 # supprime le message du jour précédant

@@ -1,5 +1,6 @@
+"""Utils for the bot."""
 from datetime import datetime
-from bot import secrets
+from bot.secrets import ROLE_ID
 
 
 def mention(msg):
@@ -9,18 +10,15 @@ def mention(msg):
      1 si oui
      0 si non
     """
-    role = "<@&" + str(secrets.ROLE_ID) + ">"
-
-    msg = msg.split(" ")  # découpe suivant les espaces
-    for i in range(len(msg)):  # pour chaque morceau
-        if msg[i] == role:  # si le mot est égal à la mention
-            return 1  # renvoie 1
-    return 0  # renvoie 0
+    role = "<@&" + str(ROLE_ID) + ">"
+    if role in msg:  # si la mention est dans le message
+        return 1
+    return 0
 
 
 def jour(msg):
     """cherche le jour dans un message"""
-    jour = [
+    jours = [
         "planning",
         "LUNDI",
         "MARDI",
@@ -29,31 +27,26 @@ def jour(msg):
         "VENDREDI",
         "SAMEDI",
         "DIMANCHE",
-    ]  # défini la liste des jours
+    ]
 
-    njour = 0  # défini une valeur défaut au numéro du jour
-    msg = msg.split(" ")  # découpe le message suivant les espaces
-    for i in range(0, len(msg)):  # pour chaque morceau
-        a = msg[i].upper()  # defini "a" égal au mot en majuscule
-        # print(a, type(a), jour)
-        if a in jour:  # si "a" est dans la liste
-            njour = jour.index(
-                a
-            )  # numéro du jour prend la valeur de l'index du jour dans la liste
-            return njour  # renvoie le numéro du jour
-    return 0  # renvoie 0
+    msg_upper = msg.upper()
+    for i, j in enumerate(jours):
+        if j in msg_upper:
+            return i
+    if f" {jours} " in msg.upper():  # si la mention est dans le message
+        return 1
+    return 0
 
 
-def mots(msg, mots):
-    """cherche un mots dans un message et renvoie ca position"""
-    msg = msg.split(" ")  # découpe le message suivant les espaces
+def mots(msg, mot):
+    """cherche un mot dans un message et renvoie sa position"""
+    mots_upper_list = msg.upper().split(" ")
+    mot_upper = mot.upper()
 
-    for i in range(0, len(msg)):  # pour chaque mots
-        a = msg[i].upper()  # defini "a" égal au mot en majuscule
-        # print(a, type(a), jour)
-        if a == mots.upper():  # si "a" est dans la liste
-            return i  # renvoie le numéro du jour
-    return -1  # renvoie 0
+    for i, todo in enumerate(mots_upper_list):
+        if todo == mot_upper:
+            return i
+    return -1
 
 
 def log(msg: str) -> None:

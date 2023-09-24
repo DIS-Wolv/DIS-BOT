@@ -3,7 +3,7 @@ from bot.sources import *
 from datetime import datetime
 
 from bot.inscription.google import sh
-from bot.inscription.utils import init, jourTransfo, UserToID, slice_in_matrix
+from bot.inscription.utils import init, jourTransfo, slice_in_matrix
 from bot.inscription.constants import jourNom
 from bot.inscription.builder import build_msg
 from bot.utils import log
@@ -236,24 +236,6 @@ def clear(jour):
     print("Nettoyage de la page", page, "correspondant à", jourNom[jour])
     wks = sh[page]  # ouvre la page correspondante
 
-    liste15 = [
-        [""],
-        [""],
-        [""],
-        [""],
-        [""],
-        [""],
-        [""],
-        [""],
-        [""],
-        [""],
-        [""],
-        [""],
-        [""],
-        [""],
-        [""],
-    ]  # crée une liste vide
-    liste10 = [[""], [""], [""], [""], [""], [""], [""], [""], [""], [""]]
 
     nom = wks.get_values("D1", "D2")  # lit le titre
     # print(nom)
