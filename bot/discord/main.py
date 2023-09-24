@@ -523,7 +523,6 @@ async def on_raw_reaction_add(payload):
         log("end on_raw_reaction_add")
 
 
-@TRACER.start_as_current_span("appelInscription")
 async def appelInscription(user, emote, jour):
     """Inscrit le joueur en fonction de ca reaction
 
@@ -531,128 +530,145 @@ async def appelInscription(user, emote, jour):
     emote = ID de l'emote
     jour = numéro du jour
     """
-    if str(user.id) == secrets.CLIENT_ID:
-        # c le bot :(
-        return
+    with TRACER.start_as_current_span("appelInscription"):
+        if str(user.id) == secrets.CLIENT_ID:
+            # c le bot :(
+            return
 
-    logchannel = bot.get_channel(secrets.LOG_CHANNEL_ID)
+        logchannel = bot.get_channel(secrets.LOG_CHANNEL_ID)
 
-    if emote == secrets.DIS_EMOTE_ID:
-        statut = inscription.add(user.id, jour, ["GV"])  # essaye d'inscrire la personne
-    elif emote == secrets.CDS_EMOTE_ID:
-        statut = inscription.add(
-            user.id, jour, ["CDS"]
-        )  # essaye d'inscrire la personne
-    elif emote == secrets.CDG_EMOTE_ID:
-        statut = inscription.add(
-            user.id, jour, ["CDG"]
-        )  # essaye d'inscrire la personne
-    elif emote == secrets.CDE_EMOTE_ID:
-        statut = inscription.add(
-            user.id, jour, ["CDE"]
-        )  # essaye d'inscrire la personne
-    elif emote == secrets.MED_EMOTE_ID:
-        statut = inscription.add(
-            user.id, jour, ["Médecin"]
-        )  # essaye d'inscrire la personne
-    elif emote == secrets.MINI_EMOTE_ID:
-        statut = inscription.add(
-            user.id, jour, ["Minimi"]
-        )  # essaye d'inscrire la personne
-    else:
-        statut = inscription.add(user.id, jour)  # essaye d'inscrire la personne
+        if emote == secrets.DIS_EMOTE_ID:
+            statut = inscription.add(
+                user.id, jour, ["GV"]
+            )  # essaye d'inscrire la personne
+        elif emote == secrets.CDS_EMOTE_ID:
+            statut = inscription.add(
+                user.id, jour, ["CDS"]
+            )  # essaye d'inscrire la personne
+        elif emote == secrets.CDG_EMOTE_ID:
+            statut = inscription.add(
+                user.id, jour, ["CDG"]
+            )  # essaye d'inscrire la personne
+        elif emote == secrets.CDE_EMOTE_ID:
+            statut = inscription.add(
+                user.id, jour, ["CDE"]
+            )  # essaye d'inscrire la personne
+        elif emote == secrets.MED_EMOTE_ID:
+            statut = inscription.add(
+                user.id, jour, ["Médecin"]
+            )  # essaye d'inscrire la personne
+        elif emote == secrets.MINI_EMOTE_ID:
+            statut = inscription.add(
+                user.id, jour, ["Minimi"]
+            )  # essaye d'inscrire la personne
+        else:
+            statut = inscription.add(user.id, jour)  # essaye d'inscrire la personne
 
-    log(f"    statut {statut}")
-    if statut == 0:
-        # deja inscrit
-        return
-    elif statut == 1:
-        # succes
-        return
-    elif statut == 2:  # Utilisateur pas dans la liste
-        err = (
-            user.display_name
-            + " (Id = `"
-            + str(user.id)
-            + "`) n'a pas pu être inscrit."
-        )
-        print("Ajout de l'utilisateur : ", user.display_name)
-        inscription.addUser(user.display_name, str(user.id))
-        print("utilisateur ajouté")
-        err += (
-            '\n:white_check_mark: Ajout de "'
-            + user.display_name
-            + "\" avec l'id ``"
-            + str(user.id)
-            + "``"
-        )
-        trace.get_current_span().set_status(StatusCode.ERROR)
-        print(err)
-        # reinscrit
-        await logchannel.send(err)
-        await appelInscription(user, emote, jour)
-        return
-    else:
-        err = "ERREUR Inscription :" + user.display_name + " id `" + str(user.id) + "`"
-        return
+        log(f"    statut {statut}")
+        if statut == 0:
+            # deja inscrit
+            return
+        elif statut == 1:
+            # succes
+            return
+        elif statut == 2:  # Utilisateur pas dans la liste
+            err = (
+                user.display_name
+                + " (Id = `"
+                + str(user.id)
+                + "`) n'a pas pu être inscrit."
+            )
+            print("Ajout de l'utilisateur : ", user.display_name)
+            inscription.addUser(user.display_name, str(user.id))
+            print("utilisateur ajouté")
+            err += (
+                '\n:white_check_mark: Ajout de "'
+                + user.display_name
+                + "\" avec l'id ``"
+                + str(user.id)
+                + "``"
+            )
+            trace.get_current_span().set_status(StatusCode.ERROR)
+            print(err)
+            # reinscrit
+            await logchannel.send(err)
+            await appelInscription(user, emote, jour)
+            return
+        else:
+            err = (
+                "ERREUR Inscription :"
+                + user.display_name
+                + " id `"
+                + str(user.id)
+                + "`"
+            )
+            return
 
 
-# Ajoute le DLC au joueur en fonction de ca reaction
-#   User = ID du joueur
-#   emote = ID de l'emote
-@TRACER.start_as_current_span("appelDLC")
 async def appelDLC(user, emote, state):
-    logchannel = bot.get_channel(secrets.LOG_CHANNEL_ID)
+    """Ajoute le DLC au joueur en fonction de ca reaction
 
-    if emote == secrets.KART_DLC_EMOTE_ID:
-        statut = inscription.stateDLC(user.id, 0, state)
-    elif emote == secrets.HELI_DLC_EMOTE_ID:
-        statut = inscription.stateDLC(user.id, 1, state)
-    elif emote == secrets.MARK_DLC_EMOTE_ID:
-        statut = inscription.stateDLC(user.id, 2, state)
-    elif emote == secrets.APEX_DLC_EMOTE_ID:
-        statut = inscription.stateDLC(user.id, 3, state)
-    elif emote == secrets.JETS_DLC_EMOTE_ID:
-        statut = inscription.stateDLC(user.id, 4, state)
-    elif emote == secrets.TANKS_DLC_EMOTE_ID:
-        statut = inscription.stateDLC(user.id, 5, state)
-    elif emote == secrets.LOW_DLC_EMOTE_ID:
-        statut = inscription.stateDLC(user.id, 6, state)
-    elif emote == secrets.GBMOB_DLC_EMOTE_ID:
-        statut = inscription.stateDLC(user.id, 7, state)
-    elif emote == secrets.CONTACT_DLC_EMOTE_ID:
-        statut = inscription.stateDLC(user.id, 8, state)
-    elif emote == secrets.PRAIRIEFIRE_DLC_EMOTE_ID:
-        statut = inscription.stateDLC(user.id, 9, state)
-    elif emote == secrets.WESTERNSAHARA_DLC_EMOTE_ID:
-        statut = inscription.stateDLC(user.id, 10, state)
+    User = ID du joueur
+    emote = ID de l'emote
+    """
+    with TRACER.start_as_current_span("appelDLC"):
+        logchannel = bot.get_channel(secrets.LOG_CHANNEL_ID)
 
-    if statut == 1:  # succes
-        err = ""
-        await SetActivity("Compter les DLCs de " + user.display_name)
-    elif statut == 2:  # Utilisateur pas dans la liste
-        err = (
-            user.display_name
-            + " (Id = `"
-            + str(user.id)
-            + "`) n'es pas dans la fiche Technique."
-        )
-        inscription.addUser(user.display_name, str(user.id))
-        err += (
-            '\n:white_check_mark: Ajout de "'
-            + user.display_name
-            + "\" avec l'id ``"
-            + str(user.id)
-            + "``"
-        )
-    else:
-        err = "ERREUR Reaction DLC :" + user.display_name + " id `" + str(user.id) + "`"
+        if emote == secrets.KART_DLC_EMOTE_ID:
+            statut = inscription.stateDLC(user.id, 0, state)
+        elif emote == secrets.HELI_DLC_EMOTE_ID:
+            statut = inscription.stateDLC(user.id, 1, state)
+        elif emote == secrets.MARK_DLC_EMOTE_ID:
+            statut = inscription.stateDLC(user.id, 2, state)
+        elif emote == secrets.APEX_DLC_EMOTE_ID:
+            statut = inscription.stateDLC(user.id, 3, state)
+        elif emote == secrets.JETS_DLC_EMOTE_ID:
+            statut = inscription.stateDLC(user.id, 4, state)
+        elif emote == secrets.TANKS_DLC_EMOTE_ID:
+            statut = inscription.stateDLC(user.id, 5, state)
+        elif emote == secrets.LOW_DLC_EMOTE_ID:
+            statut = inscription.stateDLC(user.id, 6, state)
+        elif emote == secrets.GBMOB_DLC_EMOTE_ID:
+            statut = inscription.stateDLC(user.id, 7, state)
+        elif emote == secrets.CONTACT_DLC_EMOTE_ID:
+            statut = inscription.stateDLC(user.id, 8, state)
+        elif emote == secrets.PRAIRIEFIRE_DLC_EMOTE_ID:
+            statut = inscription.stateDLC(user.id, 9, state)
+        elif emote == secrets.WESTERNSAHARA_DLC_EMOTE_ID:
+            statut = inscription.stateDLC(user.id, 10, state)
 
-    if (
-        str(user.id) != secrets.CLIENT_ID and err != ""
-    ):  # si l'utilisateur n'est pas le bot
-        await logchannel.send(err)
-        await appelDLC(user, emote, state)
+        if statut == 1:  # succes
+            err = ""
+            await SetActivity("Compter les DLCs de " + user.display_name)
+        elif statut == 2:  # Utilisateur pas dans la liste
+            err = (
+                user.display_name
+                + " (Id = `"
+                + str(user.id)
+                + "`) n'es pas dans la fiche Technique."
+            )
+            inscription.addUser(user.display_name, str(user.id))
+            err += (
+                '\n:white_check_mark: Ajout de "'
+                + user.display_name
+                + "\" avec l'id ``"
+                + str(user.id)
+                + "``"
+            )
+        else:
+            err = (
+                "ERREUR Reaction DLC :"
+                + user.display_name
+                + " id `"
+                + str(user.id)
+                + "`"
+            )
+
+        if (
+            str(user.id) != secrets.CLIENT_ID and err != ""
+        ):  # si l'utilisateur n'est pas le bot
+            await logchannel.send(err)
+            await appelDLC(user, emote, state)
 
 
 # quand une réaction est enlevée
@@ -731,35 +747,35 @@ async def on_raw_reaction_remove(payload):
         await appelDLC(user, payload.emoji.id, 0)
 
 
-@TRACER.start_as_current_span("updateMessage")
 async def updateMessage(msg):
     """met a jour le message
 
     est appellé par l'ajout ou la suppresion de reaction
     """
-    log("  updateMessage")
-    jourNom = [
-        "",
-        "Lundi",
-        "Mardi",
-        "Mercredi",
-        "Jeudi",
-        "Vendredi",
-        "Samedi",
-        "Dimanche",
-    ]
-    jour = utils.jour(msg.content)  # récupère le jours du message
+    with TRACER.start_as_current_span("updateMessage"):
+        log("  updateMessage")
+        jourNom = [
+            "",
+            "Lundi",
+            "Mardi",
+            "Mercredi",
+            "Jeudi",
+            "Vendredi",
+            "Samedi",
+            "Dimanche",
+        ]
+        jour = utils.jour(msg.content)  # récupère le jours du message
 
-    newmsg = inscription.message(jour)  # crée le nouveau message
-    # print("Message : ", newmsg)
-    if newmsg != 0:
-        if newmsg != msg:  # si le nouveau message est different de l'ancien
-            await msg.edit(content=newmsg)  # modifie le message
-        # print(jour)
-        await SetActivity(
-            str(inscription.missionName(jour) + " " + jourNom[jour] + " soir")
-        )
-    log("  end updateMessage")
+        newmsg = inscription.message(jour)  # crée le nouveau message
+        # print("Message : ", newmsg)
+        if newmsg != 0:
+            if newmsg != msg:  # si le nouveau message est different de l'ancien
+                await msg.edit(content=newmsg)  # modifie le message
+            # print(jour)
+            await SetActivity(
+                str(inscription.missionName(jour) + " " + jourNom[jour] + " soir")
+            )
+        log("  end updateMessage")
 
 
 # toutes les heures, execute :
