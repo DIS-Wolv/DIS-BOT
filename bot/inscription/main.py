@@ -71,7 +71,7 @@ def add(user: int, jour, rolevoulue=None):
         # Erreur : user n'est pas dans le dico
         return 2
 
-    with TRACER.start_as_current_span("inscription.main.add#init") as span:
+    with TRACER.start_as_current_span("inscription.main.add#init"):
         # si l'id de l'utilisateur est dans la 2e colonne du dico et que le jour est valide
         pos = dico[1].index(user)  # recupère la position de l'id de l'utilisateur
         usern = dico[0][pos]  # récupère le nom de l'utilisateur
@@ -91,10 +91,8 @@ def add(user: int, jour, rolevoulue=None):
 
         inscrit = list(map(lambda x: [x[0]], data))
         role = list(map(lambda x: [x[1]], data))
-        span.set_attribute("inscrit", str(inscrit))
-        span.set_attribute("role", str(role))
 
-    with TRACER.start_as_current_span("inscription.main.add#work") as span:
+    with TRACER.start_as_current_span("inscription.main.add#work"):
         while len(inscrit) > len(role):
             role.append(["GV"])
 
@@ -121,10 +119,8 @@ def add(user: int, jour, rolevoulue=None):
             inscrit.append(usern)  # ajoute l'utilisateur a la fin
             role.append(rolevoulue)  # defini son role
 
-        to_add = list(map(lambda x: [x[0][0], x[1][0]], zip(inscrit, role)))
-        span.set_attribute("to_add", str(to_add))
-
     with TRACER.start_as_current_span("inscription.main.add#update"):
+        to_add = list(map(lambda x: [x[0][0], x[1][0]], zip(inscrit, role)))
         if nom != [["Entraînement"]]:
             wks.update_values(f"B17:C{17 + len(to_add)}", to_add)
         else:
