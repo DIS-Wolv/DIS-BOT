@@ -11,10 +11,10 @@ def init():
     # création et complétion du dico
     dico = ["nom", "ID"]
 
-    read = wks.get_values("B8", "B200")  # lit les pseudos
+    read = wks.get_values("B8", "B60")  # lit les pseudos
     dico[0] = read  # met les pseudos dans la première colonne de dico
 
-    read = wks.get_values("C8", "C200")  # lis les ID
+    read = wks.get_values("C8", "C60")  # lis les ID
     for i in range(0, len(read)):
         read[i] = read[i][0]
     dico[1] = read  # met les IDs dans la 2e colonne de dico
