@@ -41,7 +41,7 @@ def stateDLC(user, dlc, state):
             # print(plage)
             wks.update_values(plage, DLC)
 
-            # date(user)
+            # maj_date_of_latest_inscription(user, dico)
 
             return 1
         else:
@@ -123,7 +123,7 @@ def add(user: int, jour, rolevoulue=None):
             wks.update_values("C8:C31", role)  # met à jour la liste des roles
 
         # print("utilisateur inscrit")
-        date(user)
+        maj_date_of_latest_inscription(user, dico)
 
         return 1  # sort de la fonction
     else:
@@ -131,30 +131,24 @@ def add(user: int, jour, rolevoulue=None):
         return 2  # sort de la fonction
 
 
-@TRACER.start_as_current_span("inscription.main.date")
-def date(user):
+@TRACER.start_as_current_span("inscription.main.maj_date_of_latest_inscription")
+def maj_date_of_latest_inscription(user, dico):
     """
     mise a jour de la date sur la fiche technique
     """
-    dico = init()  # initialise dico
     user = str(user)  # récupère l'id de l'utilisateur
 
     pos = dico[1].index(user)
-    tech = sh[10]
-    Date = tech.get_values("O8", "O200")
 
-    if len(Date) < len(dico[1]):
-        while len(Date) < len(dico[1]):
-            Date.append([""])
-
-    Date[pos] = [
+    # Update date of latest inscription at pos 8 + index
+    sh[10].update_value(
+        f"O{8+pos}",
         str(datetime.now().day)
         + "/"
         + str(datetime.now().month)
         + "/"
-        + str(datetime.now().year)
-    ]
-    tech.update_values("O8:O200", Date)
+        + str(datetime.now().year),
+    )
 
 
 @TRACER.start_as_current_span("inscription.main.remove")
@@ -219,7 +213,7 @@ def remove(user, jour):
                 wks.update_values("C8:C31", role)  # met à jour la liste des roles
 
             # print("utilisateur désinscrit")
-            date(user)
+            maj_date_of_latest_inscription(user, dico)
             return 1  # sort de la fonction
 
         else:  # si l'utilisateur n'est pas dans la liste des inscrits
@@ -500,7 +494,7 @@ def addUser(user, id):
         text = [[str(id)]]
         wks.update_values(range, text)
 
-        date(user)
+        maj_date_of_latest_inscription(user, init())
 
     return 0
 
