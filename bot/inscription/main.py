@@ -1,6 +1,7 @@
 from bot import secrets
 from bot.sources import *
 from datetime import datetime
+from opentelemetry import trace
 
 from bot.inscription.google import sh
 from bot.inscription.utils import init, jourTransfo, slice_in_matrix
@@ -121,10 +122,11 @@ def add(user: int, jour, rolevoulue=None):
 
     with TRACER.start_as_current_span("inscription.main.add#update"):
         to_add = list(map(list, zip(inscrit, role)))
+        trace.get_current_span().set_attribute("to_add", to_add)
         if nom != [["Entraînement"]]:
-            wks.update_values("B17:C56", to_add)
+            wks.update_values(f"B17:C{17 + len(to_add)}", to_add)
         else:
-            wks.update_values("B8:C31", to_add)
+            wks.update_values(f"B8:C{17 + len(to_add)}", to_add)
 
         maj_date_of_latest_inscription(user, dico)
 
