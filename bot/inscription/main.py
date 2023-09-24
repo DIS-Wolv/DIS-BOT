@@ -67,7 +67,11 @@ def add(user: int, jour, rolevoulue=None):
     dico = init()  # initialise dico
     user = str(user)  # récupère l'id de l'utilisateur
 
-    if (user in dico[1]) and jour != 0:
+    if not ((user in dico[1]) and jour != 0):
+        # Erreur : user n'est pas dans le dico
+        return 2
+
+    with TRACER.start_as_current_span("inscription.main.add#init"):
         # si l'id de l'utilisateur est dans la 2e colonne du dico et que le jour est valide
         pos = dico[1].index(user)  # recupère la position de l'id de l'utilisateur
         usern = dico[0][pos]  # récupère le nom de l'utilisateur
@@ -81,13 +85,14 @@ def add(user: int, jour, rolevoulue=None):
         nom = wks.get_values("D1", "D2")  # lit le titre
 
         if nom != [["Entraînement"]]:
-            inscrit = wks.get_values("B17", "B56")  # récupère les inscrits
-            role = wks.get_values("C17", "C56")  # recupère les roles
+            data = wks.get_values("B17", "C56")
         else:
-            inscrit = wks.get_values("B8", "B31")  # récupère les inscrits
-            role = wks.get_values("C8", "C31")  # recupère les roles
-        # print(inscrit, role)
+            data = wks.get_values("B8", "C31")
 
+        inscrit = list(map(lambda x: x[0], data))
+        role = list(map(lambda x: x[1], data))
+
+    with TRACER.start_as_current_span("inscription.main.add#work"):
         while len(inscrit) > len(role):
             role.append(["GV"])
 
@@ -114,21 +119,16 @@ def add(user: int, jour, rolevoulue=None):
             inscrit.append(usern)  # ajoute l'utilisateur a la fin
             role.append(rolevoulue)  # defini son role
 
-        # print(inscrit, role)
+    with TRACER.start_as_current_span("inscription.main.add#update"):
+        to_add = list(map(list, zip(inscrit, role)))
         if nom != [["Entraînement"]]:
-            wks.update_values("B17:B56", inscrit)  # met à jour le google sheet
-            wks.update_values("C17:C56", role)  # met à jour la liste des roles
+            wks.update_values("B17:C56", to_add)
         else:
-            wks.update_values("B8:B31", inscrit)  # met à jour le google sheet
-            wks.update_values("C8:C31", role)  # met à jour la liste des roles
+            wks.update_values("B8:C31", to_add)
 
-        # print("utilisateur inscrit")
         maj_date_of_latest_inscription(user, dico)
 
-        return 1  # sort de la fonction
-    else:
-        # print("Erreur : user n'est pas dans le dico")
-        return 2  # sort de la fonction
+    return 1
 
 
 @TRACER.start_as_current_span("inscription.main.maj_date_of_latest_inscription")
