@@ -1,5 +1,6 @@
 from bot.inscription.google import sh
 from bot.tracing import TRACER
+from opentelemetry import trace
 
 
 @TRACER.start_as_current_span("bot.inscription.utils.init")
@@ -13,10 +14,15 @@ def init():
     # création et complétion du dico
     dico = ["nom", "ID"]
 
+    read = wks.get_values("B8", "C600")  # lit les pseudos
+    trace.get_current_span().set_attribute("all", str(read))
+
     read = wks.get_values("B8", "B600")  # lit les pseudos
+    trace.get_current_span().set_attribute("pseudos", str(read))
     dico[0] = read  # met les pseudos dans la première colonne de dico
 
     read = wks.get_values("C8", "C600")  # lis les ID
+    trace.get_current_span().set_attribute("ids", str(read))
     for i in range(0, len(read)):
         read[i] = read[i][0]
     dico[1] = read  # met les IDs dans la 2e colonne de dico
