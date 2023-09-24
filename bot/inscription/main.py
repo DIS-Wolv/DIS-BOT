@@ -364,40 +364,40 @@ def message(jour):
      0 si pas de missions
      <str> msg si il y a une mission
     """
-    dico = init()  # initialise dico
-    log("message")
-    log(f"message -- {jour=}")
+    with TRACER.start_as_current_span("inscription.main.message#fetch_base"):
+        dico = init()  # initialise dico
+        log("message")
+        log(f"message -- {jour=}")
 
-    log("message -- fetch base")
-    page = jourTransfo(jour)  # transforme le jour en page
-    wks = sh[page]  # ouvre la page
-    name = wks.get_values("D1", "D2")  # lit le titre
-    zeus = wks.get_values("E3", "E3")  # lit le zeus
-    brief = wks.get_values("B7", "B7")  # lit le brief
-    log("message -- fetch base [done]")
+        log("message -- fetch base")
+        page = jourTransfo(jour)  # transforme le jour en page
+        wks = sh[page]  # ouvre la page
+        name = wks.get_values("D1", "D2")  # lit le titre
+        log("message -- fetch base [done]")
 
     log(f"message -- Test '{name[0][0]}'")
     if name == [["Entraînement"]]:
-        log("message -- orga")
-        orga(jour)
-        log("message -- orga [done]")
-        log("message -- fetch Entraînement")
-        inscrit = wks.get_values("B8", "B31")  # récupère les inscrits
-        role = wks.get_values("C8", "C31")  # recupère les roles
-        log("message -- fetch Entraînement [done]")
+        with TRACER.start_as_current_span("inscription.main.message#entrainement"):
+            log("message -- orga")
+            orga(jour)
+            log("message -- orga [done]")
+            log("message -- fetch Entraînement")
+            inscrit = wks.get_values("B8", "B31")  # récupère les inscrits
+            role = wks.get_values("C8", "C31")  # recupère les roles
+            log("message -- fetch Entraînement [done]")
 
-        log("message -- build_message")
-        msg = (
-            "<@&"
-            + str(secrets.ROLE_ID)
-            + "> **"
-            + name[0][0]
-            + "** "
-            + jourNom[jour]
-            + " soir : \nLe drill est la clef, venez vous entraîner ! \nInscrivez vous en réagissant ou directement "
-            "sur le planning : " + secrets.LINKS[jour]
-        )
-        log("message -- build_message [done]")
+            log("message -- build_message")
+            msg = (
+                "<@&"
+                + str(secrets.ROLE_ID)
+                + "> **"
+                + name[0][0]
+                + "** "
+                + jourNom[jour]
+                + " soir : \nLe drill est la clef, venez vous entraîner ! \nInscrivez vous en réagissant ou directement "
+                "sur le planning : " + secrets.LINKS[jour]
+            )
+            log("message -- build_message [done]")
     elif name[0][0] == "":
         log("message -- pas de mission")
         msg = 0
@@ -405,46 +405,50 @@ def message(jour):
         log("message -- orga")
         orga(jour)
         log("message -- orga [done]")
-        log("message -- fetch groups")
-        data = wks.get_values("A1", "O68", include_tailing_empty_rows=True)
+        with TRACER.start_as_current_span("inscription.main.message#mission"):
+            log("message -- fetch groups")
+            data = wks.get_values("A1", "O68", include_tailing_empty_rows=True)
 
-        inscrit = slice_in_matrix(data, 1, 2, 16, 67)  # B17 -> 67
-        role = slice_in_matrix(data, 2, 3, 16, 67)  # C17 -> 67
-        commentaire = slice_in_matrix(data, 3, 4, 16, 67)  # D17 -> 67
+            zeus = data[2][4]
+            brief = data[6][1]
 
-        Sanglier = slice_in_matrix(data, 6, 7, 18, 33)  # G19 -> 33
-        Grizzli = slice_in_matrix(data, 9, 10, 18, 33)  # J19 -> 33
-        Taureau = slice_in_matrix(data, 12, 13, 18, 33)  # M19 -> 33
+            inscrit = slice_in_matrix(data, 1, 2, 16, 67)  # B17 -> 67
+            role = slice_in_matrix(data, 2, 3, 16, 67)  # C17 -> 67
+            commentaire = slice_in_matrix(data, 3, 4, 16, 67)  # D17 -> 67
 
-        Coyote = slice_in_matrix(data, 12, 13, 7, 14)  # M8 -> 14
+            Sanglier = slice_in_matrix(data, 6, 7, 18, 33)  # G19 -> 33
+            Grizzli = slice_in_matrix(data, 9, 10, 18, 33)  # J19 -> 33
+            Taureau = slice_in_matrix(data, 12, 13, 18, 33)  # M19 -> 33
 
-        Crocodile = slice_in_matrix(data, 6, 7, 36, 39)  # G37 -> 39
-        Aligator = slice_in_matrix(data, 9, 10, 36, 39)  # J37 -> 39
+            Coyote = slice_in_matrix(data, 12, 13, 7, 14)  # M8 -> 14
 
-        Harfang = slice_in_matrix(data, 6, 7, 43, 47)  # G44 -> 47
-        Albatros = slice_in_matrix(data, 9, 10, 43, 45)  # J44 -> 45
-        log("message -- fetch groups [done]")
+            Crocodile = slice_in_matrix(data, 6, 7, 36, 39)  # G37 -> 39
+            Aligator = slice_in_matrix(data, 9, 10, 36, 39)  # J37 -> 39
 
-        log("message -- build_message")
-        msg = build_msg(
-            dico,
-            jour,
-            name,
-            zeus,
-            brief,
-            inscrit,
-            role,
-            commentaire,
-            Sanglier,
-            Grizzli,
-            Taureau,
-            Coyote,
-            Crocodile,
-            Aligator,
-            Albatros,
-            Harfang,
-        )
-        log("message -- build_message [done]")
+            Harfang = slice_in_matrix(data, 6, 7, 43, 47)  # G44 -> 47
+            Albatros = slice_in_matrix(data, 9, 10, 43, 45)  # J44 -> 45
+            log("message -- fetch groups [done]")
+
+            log("message -- build_message")
+            msg = build_msg(
+                dico,
+                jour,
+                name,
+                zeus,
+                brief,
+                inscrit,
+                role,
+                commentaire,
+                Sanglier,
+                Grizzli,
+                Taureau,
+                Coyote,
+                Crocodile,
+                Aligator,
+                Albatros,
+                Harfang,
+            )
+            log("message -- build_message [done]")
 
     log("message [done]")
     return msg
