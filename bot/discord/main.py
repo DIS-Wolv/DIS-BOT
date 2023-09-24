@@ -4,6 +4,7 @@ from datetime import datetime
 import random
 
 from opentelemetry.trace import StatusCode
+from opentelemetry import trace
 
 # ressource
 from bot import secrets
@@ -109,7 +110,7 @@ async def on_member_remove(member):
 async def on_message(message):
     with TRACER.start_as_current_span("on_message") as span:
         # print(message.channel.type)
-        span.set_attribute("author", message.author.display_name)
+        trace.get_current_span().set_attribute("author", message.author.display_name)
         if str(message.channel.type) == "text":
             # print(type(message.channel.type), message.channel.type, "== 'text'")
             print(
@@ -497,114 +498,109 @@ async def on_raw_reaction_add(payload):
 
         span.add_event("majs done")
 
-        with TRACER.start_as_current_span("sondage_dlc"):
-            test0 = utils.mots(message.content, "SONDAGE")
-            test1 = utils.mots(message.content, "RÉACTION")
-            test2 = utils.mots(message.content, "DLC")
-            if (
-                test0 != -1
-                and test1 != -1
-                and test2 != -1
-                and str(user.id) != secrets.CLIENT_ID
-            ):
-                await appelDLC(user, payload.emoji.id, 1)
-                # print(message.reactions[0].users())
-                # reactions = message.reactions # TODO optimiser tout ca qui permet de mettre a jours toute les DLC
-                # for reaction in reactions:
-                #     if reaction.emoji.id == payload.emoji.id:
-                #         async for user in reaction.users():
-                #             if str(user.id) != secrets.CLIENT_ID:
-                #                 if user in guild.members:
-                #                     await appelDLC(user, reaction.emoji.id, 1)
-                #                     # print(f'{user} a le dlc {reaction.emoji}!')
-                #                 else:
-                #                     await reaction.remove(user)
+        test0 = utils.mots(message.content, "SONDAGE")
+        test1 = utils.mots(message.content, "RÉACTION")
+        test2 = utils.mots(message.content, "DLC")
+        if (
+            test0 != -1
+            and test1 != -1
+            and test2 != -1
+            and str(user.id) != secrets.CLIENT_ID
+        ):
+            await appelDLC(user, payload.emoji.id, 1)
+            # print(message.reactions[0].users())
+            # reactions = message.reactions # TODO optimiser tout ca qui permet de mettre a jours toute les DLC
+            # for reaction in reactions:
+            #     if reaction.emoji.id == payload.emoji.id:
+            #         async for user in reaction.users():
+            #             if str(user.id) != secrets.CLIENT_ID:
+            #                 if user in guild.members:
+            #                     await appelDLC(user, reaction.emoji.id, 1)
+            #                     # print(f'{user} a le dlc {reaction.emoji}!')
+            #                 else:
+            #                     await reaction.remove(user)
 
-            log("end on_raw_reaction_add")
+        log("end on_raw_reaction_add")
 
 
-# Inscrit le joueur en fonction de ca reaction
-#   User = ID du joueur
-#   emote = ID de l'emote
-#   jour = numéro du jour
+@TRACER.start_as_current_span("appelDLC")
 async def appelInscription(user, emote, jour):
-    with TRACER.start_as_current_span("appelInscription"):
-        if str(user.id) == secrets.CLIENT_ID:
-            # c le bot :(
-            return
+    """Inscrit le joueur en fonction de ca reaction
 
-        logchannel = bot.get_channel(secrets.LOG_CHANNEL_ID)
+    User = ID du joueur
+    emote = ID de l'emote
+    jour = numéro du jour
+    """
+    if str(user.id) == secrets.CLIENT_ID:
+        # c le bot :(
+        return
 
-        if emote == secrets.DIS_EMOTE_ID:
-            statut = inscription.add(
-                user.id, jour, ["GV"]
-            )  # essaye d'inscrire la personne
-        elif emote == secrets.CDS_EMOTE_ID:
-            statut = inscription.add(
-                user.id, jour, ["CDS"]
-            )  # essaye d'inscrire la personne
-        elif emote == secrets.CDG_EMOTE_ID:
-            statut = inscription.add(
-                user.id, jour, ["CDG"]
-            )  # essaye d'inscrire la personne
-        elif emote == secrets.CDE_EMOTE_ID:
-            statut = inscription.add(
-                user.id, jour, ["CDE"]
-            )  # essaye d'inscrire la personne
-        elif emote == secrets.MED_EMOTE_ID:
-            statut = inscription.add(
-                user.id, jour, ["Médecin"]
-            )  # essaye d'inscrire la personne
-        elif emote == secrets.MINI_EMOTE_ID:
-            statut = inscription.add(
-                user.id, jour, ["Minimi"]
-            )  # essaye d'inscrire la personne
-        else:
-            statut = inscription.add(user.id, jour)  # essaye d'inscrire la personne
+    logchannel = bot.get_channel(secrets.LOG_CHANNEL_ID)
 
-        log(f"    statut {statut}")
-        if statut == 0:
-            # deja inscrit
-            return
-        elif statut == 1:
-            # succes
-            return
-        elif statut == 2:  # Utilisateur pas dans la liste
-            err = (
-                user.display_name
-                + " (Id = `"
-                + str(user.id)
-                + "`) n'a pas pu être inscrit."
-            )
-            print("Ajout de l'utilisateur : ", user.display_name)
-            inscription.addUser(user.display_name, str(user.id))
-            print("utilisateur ajouté")
-            err += (
-                '\n:white_check_mark: Ajout de "'
-                + user.display_name
-                + "\" avec l'id ``"
-                + str(user.id)
-                + "``"
-            )
-        else:
-            err = (
-                "ERREUR Inscription :"
-                + user.display_name
-                + " id `"
-                + str(user.id)
-                + "`"
-            )
-            return
+    if emote == secrets.DIS_EMOTE_ID:
+        statut = inscription.add(user.id, jour, ["GV"])  # essaye d'inscrire la personne
+    elif emote == secrets.CDS_EMOTE_ID:
+        statut = inscription.add(
+            user.id, jour, ["CDS"]
+        )  # essaye d'inscrire la personne
+    elif emote == secrets.CDG_EMOTE_ID:
+        statut = inscription.add(
+            user.id, jour, ["CDG"]
+        )  # essaye d'inscrire la personne
+    elif emote == secrets.CDE_EMOTE_ID:
+        statut = inscription.add(
+            user.id, jour, ["CDE"]
+        )  # essaye d'inscrire la personne
+    elif emote == secrets.MED_EMOTE_ID:
+        statut = inscription.add(
+            user.id, jour, ["Médecin"]
+        )  # essaye d'inscrire la personne
+    elif emote == secrets.MINI_EMOTE_ID:
+        statut = inscription.add(
+            user.id, jour, ["Minimi"]
+        )  # essaye d'inscrire la personne
+    else:
+        statut = inscription.add(user.id, jour)  # essaye d'inscrire la personne
 
+    log(f"    statut {statut}")
+    if statut == 0:
+        # deja inscrit
+        return
+    elif statut == 1:
+        # succes
+        return
+    elif statut == 2:  # Utilisateur pas dans la liste
+        err = (
+            user.display_name
+            + " (Id = `"
+            + str(user.id)
+            + "`) n'a pas pu être inscrit."
+        )
+        print("Ajout de l'utilisateur : ", user.display_name)
+        inscription.addUser(user.display_name, str(user.id))
+        print("utilisateur ajouté")
+        err += (
+            '\n:white_check_mark: Ajout de "'
+            + user.display_name
+            + "\" avec l'id ``"
+            + str(user.id)
+            + "``"
+        )
+        trace.get_current_span().set_status(StatusCode.ERROR)
         print(err)
         # reinscrit
         await logchannel.send(err)
         await appelInscription(user, emote, jour)
+        return
+    else:
+        err = "ERREUR Inscription :" + user.display_name + " id `" + str(user.id) + "`"
+        return
 
 
 # Ajoute le DLC au joueur en fonction de ca reaction
 #   User = ID du joueur
 #   emote = ID de l'emote
+@TRACER.start_as_current_span("appelDLC")
 async def appelDLC(user, emote, state):
     logchannel = bot.get_channel(secrets.LOG_CHANNEL_ID)
 
@@ -735,40 +731,13 @@ async def on_raw_reaction_remove(payload):
         await appelDLC(user, payload.emoji.id, 0)
 
 
+@TRACER.start_as_current_span("updateMessage")
 async def updateMessage(msg):
     """met a jour le message
 
     est appellé par l'ajout ou la suppresion de reaction
     """
-    with TRACER.start_as_current_span("update_message"):
-        log("  updateMessage")
-        jourNom = [
-            "",
-            "Lundi",
-            "Mardi",
-            "Mercredi",
-            "Jeudi",
-            "Vendredi",
-            "Samedi",
-            "Dimanche",
-        ]
-        jour = utils.jour(msg.content)  # récupère le jours du message
-
-        newmsg = inscription.message(jour)  # crée le nouveau message
-        # print("Message : ", newmsg)
-        if newmsg != 0:
-            if newmsg != msg:  # si le nouveau message est different de l'ancien
-                await msg.edit(content=newmsg)  # modifie le message
-            # print(jour)
-            await SetActivity(
-                str(inscription.missionName(jour) + " " + jourNom[jour] + " soir")
-            )
-        log("  end updateMessage")
-
-
-# toutes les heures, execute :
-@loop(hours=1.0)
-async def loop():
+    log("  updateMessage")
     jourNom = [
         "",
         "Lundi",
@@ -779,74 +748,116 @@ async def loop():
         "Samedi",
         "Dimanche",
     ]
-    global loopS
-    day = datetime.now().weekday()  # recupère le numéro du jour de la semaine
-    if day == 0:
-        day = 7
+    jour = utils.jour(msg.content)  # récupère le jours du message
 
-    hour = datetime.now().hour  # recupère l'heure du système
+    newmsg = inscription.message(jour)  # crée le nouveau message
+    # print("Message : ", newmsg)
+    if newmsg != 0:
+        if newmsg != msg:  # si le nouveau message est different de l'ancien
+            await msg.edit(content=newmsg)  # modifie le message
+        # print(jour)
+        await SetActivity(
+            str(inscription.missionName(jour) + " " + jourNom[jour] + " soir")
+        )
+    log("  end updateMessage")
 
-    loopS = datetime.now().minute
-    # print(hour)
-    # print(day)
-    print(datetime.now().strftime("%d/%m/%Y à %H:%M"))
 
-    channel = bot.get_channel(secrets.CHANNEL_ID)
+# toutes les heures, execute :
+@loop(hours=1.0)
+async def loop():
+    with TRACER.start_as_current_span("loop"):
+        jourNom = [
+            "",
+            "Lundi",
+            "Mardi",
+            "Mercredi",
+            "Jeudi",
+            "Vendredi",
+            "Samedi",
+            "Dimanche",
+        ]
+        global loopS
+        day = datetime.now().weekday()  # recupère le numéro du jour de la semaine
+        if day == 0:
+            day = 7
 
-    if hour <= 2:  # si l'heure est inférieure ou égale a 2
-        print("Nettoyage de la page", day, "correspondant à", jourNom[day])
-        print(str(inscription.missionName(day)))
-        if inscription.missionName(day) != "":
-            await SetActivity("nettoyer le planning")
+        hour = datetime.now().hour  # recupère l'heure du système
 
-            print(inscription.missionOrgaName(day))
+        loopS = datetime.now().minute
+        # print(hour)
+        # print(day)
+        print(datetime.now().strftime("%d/%m/%Y à %H:%M"))
 
-            if inscription.missionOrgaName(day) == "[DIS] Bot":
-                inscription.clearJoueur(day)
-                # supprime le message du jour précédant
-                async for message in channel.history(
-                    limit=7
-                ):  # pour les 7 derniers messages
-                    jourMsg = utils.jour(message.content)  # recupère le jour du message
+        channel = bot.get_channel(secrets.CHANNEL_ID)
 
-                    if jourMsg == day:  # si le message est le message du jour précédant
-                        await message.delete()  # supprime le message
+        if hour <= 2:  # si l'heure est inférieure ou égale a 2
+            print("Nettoyage de la page", day, "correspondant à", jourNom[day])
+            print(str(inscription.missionName(day)))
+            if inscription.missionName(day) != "":
+                await SetActivity("nettoyer le planning")
 
-            elif inscription.missionName(day) == "ODD de la semaine !":
-                inscription.clearJoueur(day)
-                # supprime le message du jour précédant
-                async for message in channel.history(
-                    limit=7
-                ):  # pour les 7 derniers messages
-                    jourMsg = utils.jour(message.content)  # recupère le jour du message
+                print(inscription.missionOrgaName(day))
 
-                    if jourMsg == day:  # si le message est le message du jour précédant
-                        await message.delete()  # supprime le message
+                if inscription.missionOrgaName(day) == "[DIS] Bot":
+                    inscription.clearJoueur(day)
+                    # supprime le message du jour précédant
+                    async for message in channel.history(
+                        limit=7
+                    ):  # pour les 7 derniers messages
+                        jourMsg = utils.jour(
+                            message.content
+                        )  # recupère le jour du message
+
+                        if (
+                            jourMsg == day
+                        ):  # si le message est le message du jour précédant
+                            await message.delete()  # supprime le message
+
+                elif inscription.missionName(day) == "ODD de la semaine !":
+                    inscription.clearJoueur(day)
+                    # supprime le message du jour précédant
+                    async for message in channel.history(
+                        limit=7
+                    ):  # pour les 7 derniers messages
+                        jourMsg = utils.jour(
+                            message.content
+                        )  # recupère le jour du message
+
+                        if (
+                            jourMsg == day
+                        ):  # si le message est le message du jour précédant
+                            await message.delete()  # supprime le message
+                else:
+                    print("Nettoyage du jour : " + str(day))
+                    inscription.clear(day)  # nettoie la feuille du jour d'avant
+                    # supprime le message du jour précédant
+                    async for message in channel.history(
+                        limit=7
+                    ):  # pour les 7 derniers messages
+                        jourMsg = utils.jour(
+                            message.content
+                        )  # recupère le jour du message
+
+                        if (
+                            jourMsg == day
+                        ):  # si le message est le message du jour précédant
+                            await message.delete()  # supprime le message
             else:
-                print("Nettoyage du jour : " + str(day))
-                inscription.clear(day)  # nettoie la feuille du jour d'avant
-                # supprime le message du jour précédant
-                async for message in channel.history(
-                    limit=7
-                ):  # pour les 7 derniers messages
-                    jourMsg = utils.jour(message.content)  # recupère le jour du message
+                print("Pas de nettoyage a faire")
+        elif 10 <= hour <= 21:  # si l'heure est entre 10h et 21 h
+            await appelMessage()
+            # print("appelMessage")
 
-                    if jourMsg == day:  # si le message est le message du jour précédant
-                        await message.delete()  # supprime le message
-        else:
-            print("Pas de nettoyage a faire")
-    elif 10 <= hour <= 21:  # si l'heure est entre 10h et 21 h
-        await appelMessage()
-        # print("appelMessage")
+        day = day + 1
+        if day == 8:
+            day = 1
 
-    day = day + 1
-    if day == 8:
-        day = 1
-
-    if inscription.missionName(day) != "":
-        await SetActivity(inscription.missionName(day) + " " + jourNom[day] + " soir")
-    elif inscription.missionName(day) == "":
-        await RandomActivity()
+        if inscription.missionName(day) != "":
+            await SetActivity(
+                inscription.missionName(day) + " " + jourNom[day] + " soir"
+            )
+        elif inscription.missionName(day) == "":
+            await RandomActivity()
 
 
 async def RandomActivity():
