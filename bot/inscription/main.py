@@ -89,8 +89,8 @@ def add(user: int, jour, rolevoulue=None):
         else:
             data = wks.get_values("B8", "C31")
 
-        inscrit = list(map(lambda x: x[0], data))
-        role = list(map(lambda x: x[1], data))
+        inscrit = list(map(lambda x: [x[0]], data))
+        role = list(map(lambda x: [x[1]], data))
         span.set_attribute("inscrit", str(inscrit))
         span.set_attribute("role", str(role))
 
@@ -121,7 +121,7 @@ def add(user: int, jour, rolevoulue=None):
             inscrit.append(usern)  # ajoute l'utilisateur a la fin
             role.append(rolevoulue)  # defini son role
 
-        to_add = list(map(list, zip(inscrit, role)))
+        to_add = list(map(lambda x: [x[0][0], x[1][0]], zip(inscrit, role)))
         span.set_attribute("to_add", str(to_add))
 
     with TRACER.start_as_current_span("inscription.main.add#update"):
