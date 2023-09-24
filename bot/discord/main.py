@@ -1,3 +1,4 @@
+import asyncio
 import discord
 from discord.ext.tasks import loop
 from datetime import datetime
@@ -412,9 +413,11 @@ async def on_raw_reaction_add(payload):
             # recupère le pool d'utilisateurs qui on réagi
             guild = bot.get_guild(payload.guild_id)
             # recupère l'utilisateur qui a réagi
-            user = await guild.fetch_member(payload.user_id)
             # recupère le channel
-            channel = await bot.fetch_channel(payload.channel_id)
+            user, channel = await asyncio.gather(
+                guild.fetch_member(payload.user_id),
+                bot.fetch_channel(payload.channel_id),
+            )
             # récupère le message en question
             message = await channel.fetch_message(payload.message_id)
 
