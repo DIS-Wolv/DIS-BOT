@@ -1,2 +1,5 @@
-def new_member_msg():
-    return open("new_member_msg.txt", "r", encoding="utf-8").read()
+"""Read files"""
+
+
+with open("new_member_msg.txt", "r", encoding="utf-8") as f:
+    NEW_MEMBER_MSG = f.read()

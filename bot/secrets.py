@@ -1,14 +1,16 @@
+"""Setup secrets."""
 from json import load
 from os import getenv
 
 from dotenv import load_dotenv
+
 
 load_dotenv()
 sectets_fname = getenv("SECRETS_FILE")
 if not sectets_fname:
     raise EnvironmentError("SECRETS_FILE not set")
 
-with open(sectets_fname) as f:
+with open(sectets_fname, "r", encoding="utf-8") as f:
     secrets_json = load(f)
 
 try:
@@ -40,4 +42,4 @@ try:
     WESTERNSAHARA_DLC_EMOTE_ID = secrets_json["WESTERNSAHARA_DLC_EMOTE_ID"]
     PhraseDAttente = secrets_json["PhraseDAttente"]
 except KeyError as e:
-    raise EnvironmentError(f"Key {e} not found in secrets file")
+    raise EnvironmentError(f"Key {e} not found in secrets file") from e

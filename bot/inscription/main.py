@@ -27,7 +27,6 @@ def stateDLC(user, dlc, state):
     colone = ["D", "E", "F", "G", "H", "I", "J", "K", "L", "M", "N"]
 
     if name == [["Détails techniques (ne PAS toucher)"]]:
-
         if user in dico[1]:
             pos = dico[1].index(user) + 8
 
@@ -49,7 +48,7 @@ def stateDLC(user, dlc, state):
         return -1
 
 
-def add(user: int, jour, rolevoulue = None):
+def add(user: int, jour, rolevoulue=None):
     """
     est appellé par le bot
     incrit l'utilisateur avec le role souhaité au jour demandé
@@ -61,7 +60,7 @@ def add(user: int, jour, rolevoulue = None):
     """
     if rolevoulue is None:
         rolevoulue = []
-        
+
     dico = init()  # initialise dico
     user = str(user)  # récupère l'id de l'utilisateur
 
@@ -107,7 +106,6 @@ def add(user: int, jour, rolevoulue = None):
                 if inscrit[i] == usern:
                     role[i] = rolevoulue
 
-
         # si pas de place, se rajoute a la fin
         if ins:  # si utilisateur toujours a inscrire
             inscrit.append(usern)  # ajoute l'utilisateur a la fin
@@ -140,11 +138,11 @@ def date(user):
     pos = dico[1].index(user)
     tech = sh[10]
     Date = tech.get_values("O8", "O200")
-    
+
     if len(Date) < len(dico[1]):
         while len(Date) < len(dico[1]):
-            Date.append([''])
-        
+            Date.append([""])
+
     Date[pos] = [
         str(datetime.now().day)
         + "/"
@@ -194,7 +192,6 @@ def remove(user, jour):
         # print(inscrit)
 
         if usern in inscrit:  # si l'utilisateur est inscrit
-
             # cherche dans la liste des inscrits
             for i in range(0, len(inscrit)):  # parcours la liste des inscrits
                 if inscrit[i] == usern:  # si on est a la position de l'utilisateur
@@ -205,9 +202,13 @@ def remove(user, jour):
                         commentaire[i] = [""]  # supprime son commentaire
 
             if nom != [["Entraînement"]]:
-                wks.update_values("B17:B56", inscrit)  # met à jour la liste des inscrits
+                wks.update_values(
+                    "B17:B56", inscrit
+                )  # met à jour la liste des inscrits
                 wks.update_values("C17:C56", role)  # met à jour la liste des roles
-                wks.update_values("D17:D56", commentaire)  # met à jour la liste des commentaires
+                wks.update_values(
+                    "D17:D56", commentaire
+                )  # met à jour la liste des commentaires
             else:
                 wks.update_values("B8:B31", inscrit)  # met à jour la liste des inscrits
                 wks.update_values("C8:C31", role)  # met à jour la liste des roles
@@ -236,7 +237,6 @@ def clear(jour):
     print("Nettoyage de la page", page, "correspondant à", jourNom[jour])
     wks = sh[page]  # ouvre la page correspondante
 
-
     nom = wks.get_values("D1", "D2")  # lit le titre
     # print(nom)
     if nom != [["Entraînement"]]:
@@ -264,7 +264,23 @@ def clearJoueur(jour):
     print("Nettoyage des inscrit de la page", page, "correspondant à", jourNom[jour])
     wks = sh[page]  # ouvre la page correspondante
 
-    liste15 = [[""],[""],[""],[""],[""],[""],[""],[""],[""],[""],[""],[""],[""],[""],[""]]  # crée une liste vide
+    liste15 = [
+        [""],
+        [""],
+        [""],
+        [""],
+        [""],
+        [""],
+        [""],
+        [""],
+        [""],
+        [""],
+        [""],
+        [""],
+        [""],
+        [""],
+        [""],
+    ]  # crée une liste vide
     liste10 = [[""], [""], [""], [""], [""], [""], [""], [""], [""], [""]]
 
     nom = wks.get_values("D1", "D2")  # lit le titre
@@ -290,7 +306,6 @@ def clearJoueur(jour):
         wks.update_values("D47:D57", liste10)
         wks.update_values("D57:D67", liste10)
 
-
         # sanglier
         wks.update_values("G19:G33", liste15)
         # grizzli
@@ -305,7 +320,6 @@ def clearJoueur(jour):
 
         # Coyote
         wks.update_values("M8:M14", [[""], [""], [""], [""], [""], [""], [""]])
-
 
         # CROCODILE
         wks.update_values("G37:G39", [[""], [""], [""]])
@@ -398,19 +412,36 @@ def message(jour):
 
         Sanglier = slice_in_matrix(data, 6, 7, 18, 33)  # G19 -> 33
         Grizzli = slice_in_matrix(data, 9, 10, 18, 33)  # J19 -> 33
-        Taureau = slice_in_matrix(data, 12, 13, 18, 33) # M19 -> 33
+        Taureau = slice_in_matrix(data, 12, 13, 18, 33)  # M19 -> 33
 
-        Coyote = slice_in_matrix(data, 12, 13, 7, 14)   # M8 -> 14
+        Coyote = slice_in_matrix(data, 12, 13, 7, 14)  # M8 -> 14
 
         Crocodile = slice_in_matrix(data, 6, 7, 36, 39)  # G37 -> 39
         Aligator = slice_in_matrix(data, 9, 10, 36, 39)  # J37 -> 39
-        
-        Harfang = slice_in_matrix(data, 6, 7, 43, 47)    # G44 -> 47
+
+        Harfang = slice_in_matrix(data, 6, 7, 43, 47)  # G44 -> 47
         Albatros = slice_in_matrix(data, 9, 10, 43, 45)  # J44 -> 45
         log("message -- fetch groups [done]")
 
         log("message -- build_message")
-        msg = build_msg(dico, jour, name, zeus, brief, inscrit, role, commentaire, Sanglier, Grizzli, Taureau, Coyote, Crocodile, Aligator, Albatros, Harfang)
+        msg = build_msg(
+            dico,
+            jour,
+            name,
+            zeus,
+            brief,
+            inscrit,
+            role,
+            commentaire,
+            Sanglier,
+            Grizzli,
+            Taureau,
+            Coyote,
+            Crocodile,
+            Aligator,
+            Albatros,
+            Harfang,
+        )
         log("message -- build_message [done]")
 
     log("message [done]")
@@ -500,6 +531,7 @@ def missionName(jour):
     # print(nom)
     return nom[0][0]
 
+
 def missionOrgaName(jour):
     """
     est appellé par le bot
@@ -560,4 +592,3 @@ def orga(jour):
             result.append(inscrit[i] + role[i] + commentaire[i])
         wks.update_values("B17:D40", result)
         log("orga -- update [done]")
-

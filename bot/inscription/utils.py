@@ -67,6 +67,8 @@ def UserToID(user, dico):
         return False
 
 
-def slice_in_matrix(matrix: list[list], xmin: int, xmax: int, ymin: int, ymax: int) -> list[list]:
+def slice_in_matrix(
+    matrix: list[list], xmin: int, xmax: int, ymin: int, ymax: int
+) -> list[list]:
     """Slice a matrix."""
     return [row[xmin:xmax] for row in matrix[ymin:ymax]]

@@ -3,12 +3,13 @@ from discord.ext.tasks import loop
 from datetime import datetime
 import random
 
+
 # ressource
 from bot import secrets
 from bot import inscription
 from bot import utils
 from bot.utils import log
-from bot.sources import new_member_msg
+from bot.sources import NEW_MEMBER_MSG
 
 # définition du bot
 intents = discord.Intents.all()
@@ -74,9 +75,8 @@ async def on_member_join(member):
     await SetActivity("Acceuillir " + str(member.display_name))
 
     logchannel = bot.get_channel(secrets.LOG_CHANNEL_ID)
-    await member.send(
-        new_member_msg()
-    )  # mp le nouveaux avec le message dans new_member_msg.txt
+    # mp le nouveau
+    await member.send(NEW_MEMBER_MSG)
 
     msg = "Message d'acceuil envoyé à \"" + str(member.display_name) + '"'
     await logchannel.send(msg)
@@ -330,7 +330,7 @@ async def on_message(message):
                 serv = bot.get_guild(secrets.SERVER_ID)
                 member = serv.get_member(int(msgcont[1]))
                 # print(member.display_name)
-                # await member.send(new_member_msg())
+                # await member.send(NEW_MEMBER_MSG)
                 await on_member_join(member)
 
         test = utils.mots(
@@ -404,15 +404,13 @@ async def on_raw_reaction_add(payload):
     # async for user in reaction.users():
     # print(f'{user} has reacted with {payload.emoji}!')
 
-    if (
-        payload.channel_id == secrets.CHANNEL_ID and str(user.id) != secrets.CLIENT_ID
-    ):  # si la réaction est dans le channel souhaité
+    if payload.channel_id == secrets.CHANNEL_ID and str(user.id) != secrets.CLIENT_ID:
+        # si la réaction est dans le channel souhaité
         # print(payload.emoji.id)
         jour = utils.jour(message.content)  # recupère le jour du message
         # print(user.display_name, "a réagit : ", payload.emoji)
-        if (
-            payload.emoji.id in emote and jour != 0
-        ):  # si l'emote est une des emotes souhaitées et qu'il y a un jour sur le message
+        if payload.emoji.id in emote and jour != 0:
+            # si l'emote est une des emotes souhaitées et qu'il y a un jour sur le message
             # print(payload.emoji.id)
             log("  appelInscription")
             await appelInscription(
