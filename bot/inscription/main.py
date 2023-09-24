@@ -1,7 +1,6 @@
 from bot import secrets
 from bot.sources import *
 from datetime import datetime
-from opentelemetry import trace
 
 from bot.inscription.google import sh
 from bot.inscription.utils import init, jourTransfo, slice_in_matrix
@@ -72,7 +71,7 @@ def add(user: int, jour, rolevoulue=None):
         # Erreur : user n'est pas dans le dico
         return 2
 
-    with TRACER.start_as_current_span("inscription.main.add#init"):
+    with TRACER.start_as_current_span("inscription.main.add#init") as span:
         # si l'id de l'utilisateur est dans la 2e colonne du dico et que le jour est valide
         pos = dico[1].index(user)  # recupère la position de l'id de l'utilisateur
         usern = dico[0][pos]  # récupère le nom de l'utilisateur
@@ -92,8 +91,10 @@ def add(user: int, jour, rolevoulue=None):
 
         inscrit = list(map(lambda x: x[0], data))
         role = list(map(lambda x: x[1], data))
+        span.set_attribute("inscrit", str(inscrit))
+        span.set_attribute("role", str(role))
 
-    with TRACER.start_as_current_span("inscription.main.add#work"):
+    with TRACER.start_as_current_span("inscription.main.add#work") as span:
         while len(inscrit) > len(role):
             role.append(["GV"])
 
@@ -121,7 +122,7 @@ def add(user: int, jour, rolevoulue=None):
             role.append(rolevoulue)  # defini son role
 
         to_add = list(map(list, zip(inscrit, role)))
-        trace.get_current_span().set_attribute("to_add", to_add)
+        span.set_attribute("to_add", str(to_add))
 
     with TRACER.start_as_current_span("inscription.main.add#update"):
         if nom != [["Entraînement"]]:
