@@ -6,9 +6,11 @@ from bot.inscription.google import sh
 from bot.inscription.utils import init, jourTransfo, slice_in_matrix
 from bot.inscription.constants import jourNom
 from bot.inscription.builder import build_msg
+from bot.tracing import TRACER
 from bot.utils import log
 
 
+@TRACER.start_as_current_span("inscription.main.stateDLC")
 def stateDLC(user, dlc, state):
     """
     est appellé par le bot
@@ -48,6 +50,7 @@ def stateDLC(user, dlc, state):
         return -1
 
 
+@TRACER.start_as_current_span("inscription.main.add")
 def add(user: int, jour, rolevoulue=None):
     """
     est appellé par le bot
@@ -128,6 +131,7 @@ def add(user: int, jour, rolevoulue=None):
         return 2  # sort de la fonction
 
 
+@TRACER.start_as_current_span("inscription.main.date")
 def date(user):
     """
     mise a jour de la date sur la fiche technique
@@ -153,6 +157,7 @@ def date(user):
     tech.update_values("O8:O200", Date)
 
 
+@TRACER.start_as_current_span("inscription.main.remove")
 def remove(user, jour):
     """
     est appellé par le bot
@@ -226,6 +231,7 @@ def remove(user, jour):
         return 2  # sort de la fonction
 
 
+@TRACER.start_as_current_span("inscription.main.clear")
 def clear(jour):
     """
     est appellé par le bot
@@ -254,6 +260,7 @@ def clear(jour):
     )  # met un message dans la console indiquant la page et le jour nettoyé
 
 
+@TRACER.start_as_current_span("inscription.main.clearJoueur")
 def clearJoueur(jour):
     """
     est appellé par le bot et la fonction clear
@@ -355,6 +362,7 @@ def clearJoueur(jour):
         wks.update_values("M16:M25", liste10)
 
 
+@TRACER.start_as_current_span("inscription.main.message")
 def message(jour):
     """
     est appellé par le bot
@@ -448,6 +456,7 @@ def message(jour):
     return msg
 
 
+@TRACER.start_as_current_span("inscription.main.jourPage")
 def jourPage(page):
     """
     est appellé par le bot
@@ -458,6 +467,7 @@ def jourPage(page):
     return nom[0][0]
 
 
+@TRACER.start_as_current_span("inscription.main.addUser")
 def addUser(user, id):
     """
     est appellé par le bot
@@ -495,6 +505,7 @@ def addUser(user, id):
     return 0
 
 
+@TRACER.start_as_current_span("inscription.main.remUser")
 def remUser(id):
     """
     est appellé par le bot
@@ -520,6 +531,7 @@ def remUser(id):
     return 0
 
 
+@TRACER.start_as_current_span("inscription.main.missionName")
 def missionName(jour):
     """
     est appellé par le bot
@@ -532,6 +544,7 @@ def missionName(jour):
     return nom[0][0]
 
 
+@TRACER.start_as_current_span("inscription.main.missionOrgaName")
 def missionOrgaName(jour):
     """
     est appellé par le bot
@@ -544,6 +557,7 @@ def missionOrgaName(jour):
     return nom[0][0]
 
 
+@TRACER.start_as_current_span("inscription.main.orga")
 def orga(jour):
     """
     Organise la page du jours dans l'ordre des roles
