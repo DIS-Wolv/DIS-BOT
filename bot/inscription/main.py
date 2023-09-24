@@ -120,9 +120,10 @@ def add(user: int, jour, rolevoulue=None):
             inscrit.append(usern)  # ajoute l'utilisateur a la fin
             role.append(rolevoulue)  # defini son role
 
-    with TRACER.start_as_current_span("inscription.main.add#update"):
         to_add = list(map(list, zip(inscrit, role)))
         trace.get_current_span().set_attribute("to_add", to_add)
+
+    with TRACER.start_as_current_span("inscription.main.add#update"):
         if nom != [["Entraînement"]]:
             wks.update_values(f"B17:C{17 + len(to_add)}", to_add)
         else:
