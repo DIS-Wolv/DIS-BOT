@@ -1,6 +1,8 @@
 from bot.inscription.google import sh
+from bot.tracing import TRACER
 
 
+@TRACER.start_as_current_span("bot.inscription.utils.init")
 def init():
     """
     est appellé pour initialiser dico
