@@ -472,52 +472,55 @@ async def on_raw_reaction_add(payload):
                         await logchannel.send(err)
 
             # TODO optimiser tout ca
-            elif (
-                str(payload.emoji) == str("🔄") and jour != 0
-            ):  # si la réaction est une reaction non pris en charge
-                log("  majInscrit")
-                reactions = message.reactions  # recupère toute les reaction
-                for reaction in reactions:  # pour chaque reactions
-                    if type(reaction.emoji) != str:
-                        if (
-                            reaction.emoji.id in emote
-                        ):  # si elle est dans les reactions d'inscription
-                            async for u in reaction.users():  # pour chaque user qui on reagit
-                                if (
-                                    str(u.id) != secrets.CLIENT_ID
-                                ):  # si ce n'est pas le bot
-                                    await appelInscription(
-                                        u, reaction.emoji.id, jour
-                                    )  # (re)inscrit le joueur
-                                    await message.remove_reaction(reaction.emoji, u)
-                log("  end majInscrit")
-                await message.remove_reaction(payload.emoji, user)
+            # si la réaction est une reaction non pris en charge
+            elif str(payload.emoji) == str("🔄") and jour != 0:
+                with TRACER.start_as_current_span("maj_inscription"):
+                    log("  majInscrit")
+                    reactions = message.reactions  # recupère toute les reaction
+                    for reaction in reactions:  # pour chaque reactions
+                        if not isinstance(reaction.emoji, str):
+                            # si elle est dans les reactions d'inscription
+                            if reaction.emoji.id in emote:
+                                # pour chaque user qui on reagit
+                                async for u in reaction.users():
+                                    # si ce n'est pas le bot
+                                    if str(u.id) != secrets.CLIENT_ID:
+                                        # (re)inscrit le joueur
+                                        await appelInscription(
+                                            u, reaction.emoji.id, jour
+                                        )
+                                        await message.remove_reaction(reaction.emoji, u)
+                    log("  end majInscrit")
+                    await message.remove_reaction(payload.emoji, user)
 
             await updateMessage(message)  # met a jour la liste des inscrits
 
-        test0 = utils.mots(message.content, "SONDAGE")
-        test1 = utils.mots(message.content, "RÉACTION")
-        test2 = utils.mots(message.content, "DLC")
-        if (
-            test0 != -1
-            and test1 != -1
-            and test2 != -1
-            and str(user.id) != secrets.CLIENT_ID
-        ):
-            await appelDLC(user, payload.emoji.id, 1)
-            # print(message.reactions[0].users())
-            # reactions = message.reactions # TODO optimiser tout ca qui permet de mettre a jours toute les DLC
-            # for reaction in reactions:
-            #     if reaction.emoji.id == payload.emoji.id:
-            #         async for user in reaction.users():
-            #             if str(user.id) != secrets.CLIENT_ID:
-            #                 if user in guild.members:
-            #                     await appelDLC(user, reaction.emoji.id, 1)
-            #                     # print(f'{user} a le dlc {reaction.emoji}!')
-            #                 else:
-            #                     await reaction.remove(user)
+        span.add_event("majs done")
 
-        log("end on_raw_reaction_add")
+        with TRACER.start_as_current_span("sondage_dlc"):
+            test0 = utils.mots(message.content, "SONDAGE")
+            test1 = utils.mots(message.content, "RÉACTION")
+            test2 = utils.mots(message.content, "DLC")
+            if (
+                test0 != -1
+                and test1 != -1
+                and test2 != -1
+                and str(user.id) != secrets.CLIENT_ID
+            ):
+                await appelDLC(user, payload.emoji.id, 1)
+                # print(message.reactions[0].users())
+                # reactions = message.reactions # TODO optimiser tout ca qui permet de mettre a jours toute les DLC
+                # for reaction in reactions:
+                #     if reaction.emoji.id == payload.emoji.id:
+                #         async for user in reaction.users():
+                #             if str(user.id) != secrets.CLIENT_ID:
+                #                 if user in guild.members:
+                #                     await appelDLC(user, reaction.emoji.id, 1)
+                #                     # print(f'{user} a le dlc {reaction.emoji}!')
+                #                 else:
+                #                     await reaction.remove(user)
+
+            log("end on_raw_reaction_add")
 
 
 # Inscrit le joueur en fonction de ca reaction
@@ -732,32 +735,35 @@ async def on_raw_reaction_remove(payload):
         await appelDLC(user, payload.emoji.id, 0)
 
 
-# est appellé par l'ajout ou la suppresion de reaction
-# met a jour le message
 async def updateMessage(msg):
-    log("  updateMessage")
-    jourNom = [
-        "",
-        "Lundi",
-        "Mardi",
-        "Mercredi",
-        "Jeudi",
-        "Vendredi",
-        "Samedi",
-        "Dimanche",
-    ]
-    jour = utils.jour(msg.content)  # récupère le jours du message
+    """met a jour le message
 
-    newmsg = inscription.message(jour)  # crée le nouveau message
-    # print("Message : ", newmsg)
-    if newmsg != 0:
-        if newmsg != msg:  # si le nouveau message est different de l'ancien
-            await msg.edit(content=newmsg)  # modifie le message
-        # print(jour)
-        await SetActivity(
-            str(inscription.missionName(jour) + " " + jourNom[jour] + " soir")
-        )
-    log("  end updateMessage")
+    est appellé par l'ajout ou la suppresion de reaction
+    """
+    with TRACER.start_as_current_span("update_message"):
+        log("  updateMessage")
+        jourNom = [
+            "",
+            "Lundi",
+            "Mardi",
+            "Mercredi",
+            "Jeudi",
+            "Vendredi",
+            "Samedi",
+            "Dimanche",
+        ]
+        jour = utils.jour(msg.content)  # récupère le jours du message
+
+        newmsg = inscription.message(jour)  # crée le nouveau message
+        # print("Message : ", newmsg)
+        if newmsg != 0:
+            if newmsg != msg:  # si le nouveau message est different de l'ancien
+                await msg.edit(content=newmsg)  # modifie le message
+            # print(jour)
+            await SetActivity(
+                str(inscription.missionName(jour) + " " + jourNom[jour] + " soir")
+            )
+        log("  end updateMessage")
 
 
 # toutes les heures, execute :
