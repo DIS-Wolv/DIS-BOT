@@ -523,7 +523,7 @@ async def on_raw_reaction_add(payload):
         log("end on_raw_reaction_add")
 
 
-@TRACER.start_as_current_span("appelDLC")
+@TRACER.start_as_current_span("appelInscription")
 async def appelInscription(user, emote, jour):
     """Inscrit le joueur en fonction de ca reaction
 
