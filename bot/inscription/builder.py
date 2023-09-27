@@ -26,16 +26,16 @@ def build_msg(
 ):
     """crée le message d'annonce"""
     msg = "<@&" + str(secrets.ROLE_ID) + "> **" + name[0][0] + "** organisée par __"
-    if UserToID(zeus[0][0], dico) is not False:
-        msg += "<@" + UserToID(zeus[0][0], dico) + ">"
+    if UserToID(zeus[0], dico) is not False:
+        msg += "<@" + UserToID(zeus[0], dico) + ">"
     else:
-        msg += zeus[0][0]
+        msg += zeus[0]
 
     msg += (
         "__ "
         + jourNom[jour]
         + " soir, à 20h45, voici le briefing : ```"
-        + brief[0][0]
+        + brief[0]
         + "\n```Inscrivez vous en réagissant ou directement sur le planning : "
         # + secrets.LINKS[jour]
     )
