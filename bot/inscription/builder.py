@@ -40,11 +40,12 @@ def build_msg(
         msg += (
             ", voici le briefing : ```"
             + brief
+            + "```"
         )
     else:
-        msg += "."
+        msg += ".\n"
     msg += (
-        "\n```Inscrivez vous en réagissant ou directement sur le planning : "
+        "Inscrivez vous en réagissant ou directement sur le planning : "
         # + secrets.LINKS[jour]
     )
 
