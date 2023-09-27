@@ -36,7 +36,7 @@ def build_msg(
         + jourNom[jour]
         + " soir, à 20h45"
     )
-    if breif != "":
+    if brief != "":
         msg += (
             ", voici le briefing : ```"
             + brief
