@@ -430,7 +430,6 @@ def message(jour):
             log("message -- fetch groups [done]")
 
             log("message -- build_message")
-            log(("message -- build_message_param : " + str(name) + str(zeus) + str(brief)))
             msg = build_msg(
                 dico,
                 jour,
