@@ -34,8 +34,16 @@ def build_msg(
     msg += (
         "__ "
         + jourNom[jour]
-        + " soir, à 20h45, voici le briefing : ```"
-        + brief
+        + " soir, à 20h45"
+    )
+    if breif != "":
+        msg += (
+            ", voici le briefing : ```"
+            + brief
+        )
+    else:
+        msg += "."
+    msg += (
         + "\n```Inscrivez vous en réagissant ou directement sur le planning : "
         # + secrets.LINKS[jour]
     )
