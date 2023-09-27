@@ -44,7 +44,7 @@ def build_msg(
     else:
         msg += "."
     msg += (
-        + "\n```Inscrivez vous en réagissant ou directement sur le planning : "
+        "\n```Inscrivez vous en réagissant ou directement sur le planning : "
         # + secrets.LINKS[jour]
     )
 
