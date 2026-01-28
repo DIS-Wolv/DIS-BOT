@@ -1,5 +1,6 @@
 secrets/*
 !secrets/.gitkeep
+!secrets/bot.json.example
 __pycache__/
 *.py[cod]
 .env
