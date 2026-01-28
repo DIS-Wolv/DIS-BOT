@@ -26,5 +26,5 @@ python -m pip install -r .\requirements.txt
 4. Run le bot (dans le venv)
 
 ```
-python -m b
+python -m bot
 ```
