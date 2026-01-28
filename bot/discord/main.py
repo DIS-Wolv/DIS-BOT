@@ -34,6 +34,17 @@ emote = [
     secrets.MINI_EMOTE_ID,
 ]
 
+JOURNOM = [
+        "",
+        "Lundi",
+        "Mardi",
+        "Mercredi",
+        "Jeudi",
+        "Vendredi",
+        "Samedi",
+        "Dimanche",
+    ]
+
 global loopS
 loopS = -1
 
@@ -782,19 +793,9 @@ async def updateMessage(msg):
 
 
 # toutes les heures, execute :
-@loop(hours=1.0)
+@tasks.loop(hours=1.0)
 async def loop():
     with TRACER.start_as_current_span("loop"):
-        jourNom = [
-            "",
-            "Lundi",
-            "Mardi",
-            "Mercredi",
-            "Jeudi",
-            "Vendredi",
-            "Samedi",
-            "Dimanche",
-        ]
         global loopS
         day = datetime.now().weekday()  # recupère le numéro du jour de la semaine
         if day == 0:
@@ -810,59 +811,7 @@ async def loop():
         channel = bot.get_channel(secrets.CHANNEL_ID)
 
         if hour <= 2:  # si l'heure est inférieure ou égale a 2
-            print("Nettoyage de la page", day, "correspondant à", jourNom[day])
-            print(str(inscription.missionName(day)))
-            if inscription.missionName(day) != "":
-                await SetActivity("nettoyer le planning")
-
-                print(inscription.missionOrgaName(day))
-
-                if inscription.missionOrgaName(day) == "[DIS] Bot":
-                    inscription.clearJoueur(day)
-                    # supprime le message du jour précédant
-                    async for message in channel.history(
-                        limit=7
-                    ):  # pour les 7 derniers messages
-                        jourMsg = utils.jour(
-                            message.content
-                        )  # recupère le jour du message
-
-                        if (
-                            jourMsg == day
-                        ):  # si le message est le message du jour précédant
-                            await message.delete()  # supprime le message
-
-                elif inscription.missionName(day) == "ODD de la semaine !":
-                    inscription.clearJoueur(day)
-                    # supprime le message du jour précédant
-                    async for message in channel.history(
-                        limit=7
-                    ):  # pour les 7 derniers messages
-                        jourMsg = utils.jour(
-                            message.content
-                        )  # recupère le jour du message
-
-                        if (
-                            jourMsg == day
-                        ):  # si le message est le message du jour précédant
-                            await message.delete()  # supprime le message
-                else:
-                    print("Nettoyage du jour : " + str(day))
-                    inscription.clear(day)  # nettoie la feuille du jour d'avant
-                    # supprime le message du jour précédant
-                    async for message in channel.history(
-                        limit=7
-                    ):  # pour les 7 derniers messages
-                        jourMsg = utils.jour(
-                            message.content
-                        )  # recupère le jour du message
-
-                        if (
-                            jourMsg == day
-                        ):  # si le message est le message du jour précédant
-                            await message.delete()  # supprime le message
-            else:
-                print("Pas de nettoyage a faire")
+            print("clear")
         elif 10 <= hour <= 21:  # si l'heure est entre 10h et 21 h
             await appelMessage()
             # print("appelMessage")
@@ -873,17 +822,96 @@ async def loop():
 
         if inscription.missionName(day) != "":
             await SetActivity(
-                inscription.missionName(day) + " " + jourNom[day] + " soir"
+                inscription.missionName(day) + " " + JOURNOM[day] + " soir"
             )
         elif inscription.missionName(day) == "":
             await RandomActivity()
-
 
 async def RandomActivity():
     nom = secrets.PhraseDAttente[random.randint(0, (len(secrets.PhraseDAttente) - 1))]
     await SetActivity(nom)
     return nom
 
+TimeZone=timezone(timedelta(hours=1))  # Heure de Paris (UTC+1)
+
+timesClear = [
+    time(hour=11, minute=38, tzinfo=TimeZone)
+]
+timesMessages = [
+    time(hour=10, tzinfo=TimeZone)
+]
+timesRappel = [
+    time(hour=20, minute=30, tzinfo=TimeZone)
+]
+
+@tasks.loop(time=timesClear)
+async def Clear():
+    with TRACER.start_as_current_span("ClearLoop"):        
+        day = datetime.now().weekday()  # recupère le numéro du jour de la semaine
+        if day == 0:
+            day = 7
+        
+        channel = bot.get_channel(secrets.CHANNEL_ID)
+        print("Nettoyage de la page", day, "correspondant à", JOURNOM[day])
+        print(str(inscription.missionName(day)))
+        
+        if inscription.missionName(day) != "":
+            await SetActivity("nettoyer le planning")
+
+            print(inscription.missionOrgaName(day))
+
+            if inscription.missionOrgaName(day) == "[DIS] Bot":
+                inscription.clearJoueur(day)
+                # supprime le message du jour précédant
+                async for message in channel.history(
+                    limit=7
+                ):  # pour les 7 derniers messages
+                    jourMsg = utils.jour(
+                        message.content
+                    )  # recupère le jour du message
+
+                    if (
+                        jourMsg == day
+                    ):  # si le message est le message du jour précédant
+                        await message.delete()  # supprime le message
+
+            elif inscription.missionName(day) == "ODD de la semaine !":
+                inscription.clearJoueur(day)
+                # supprime le message du jour précédant
+                async for message in channel.history(
+                    limit=7
+                ):  # pour les 7 derniers messages
+                    jourMsg = utils.jour(
+                        message.content
+                    )  # recupère le jour du message
+
+                    if (
+                        jourMsg == day
+                    ):  # si le message est le message du jour précédant
+                        await message.delete()  # supprime le message
+            else:
+                print("Nettoyage du jour : " + str(day))
+                inscription.clear(day)  # nettoie la feuille du jour d'avant
+                # supprime le message du jour précédant
+                async for message in channel.history(
+                    limit=7
+                ):  # pour les 7 derniers messages
+                    jourMsg = utils.jour(
+                        message.content
+                    )  # recupère le jour du message
+
+                    if (
+                        jourMsg == day
+                    ):  # si le message est le message du jour précédant
+                        await message.delete()  # supprime le message
+        else:
+            print("Pas de nettoyage a faire")
+
+
+@tasks.loop(time=timesMessages)
+async def Messages():
+    print("Appel des messages programmés")
+    await appelMessage()
 
 # set une activité
 async def SetActivity(nom):
@@ -940,19 +968,9 @@ async def appelMessage():
 
             if statut:  # si le statut a changé
                 statut = False  # définie le statut comme changé
-                jourNom = [
-                    "",
-                    "Lundi",
-                    "Mardi",
-                    "Mercredi",
-                    "Jeudi",
-                    "Vendredi",
-                    "Samedi",
-                    "Dimanche",
-                ]
 
                 await SetActivity(
-                    inscription.missionName(target) + " " + jourNom[target] + " soir"
+                    inscription.missionName(target) + " " + JOURNOM[target] + " soir"
                 )
 
 
@@ -975,3 +993,5 @@ async def Erreur():
     global loopS
     loopS = -1
     await logchannel.send(":x: Les évènements répétitifs se sont arrété")
+
+
