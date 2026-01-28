@@ -1,8 +1,9 @@
 import asyncio
 import discord
-from discord.ext.tasks import loop
-from datetime import datetime
+from discord.ext import tasks
+from datetime import datetime, timedelta, timezone, time
 import random
+import typing
 
 from opentelemetry.trace import StatusCode
 from opentelemetry import trace
@@ -18,7 +19,10 @@ from bot.sources import NEW_MEMBER_MSG
 # définition du bot
 intents = discord.Intents.all()
 intents.members = True
+intents.message_content = True
 bot = discord.Client(intents=intents)
+
+tree = discord.app_commands.CommandTree(bot)
 
 # création d'une variable de type message
 message = discord.abc.Messageable
@@ -49,6 +53,104 @@ global loopS
 loopS = -1
 
 
+@tree.command(
+        name="ping",
+        description="Returns pong",
+        guild=discord.Object(id=secrets.SERVER_ID)
+    )
+async def ping(interaction: discord.Interaction):
+    await interaction.response.send_message("Pong!")
+
+# @tree.command(
+#     name="test",
+#     description="My first application Command",
+#     guild=discord.Object(id=secrets.SERVER_ID)
+# )
+# async def first_command(interaction: discord.Interaction, arg: str, date: str):
+#     if date[0] == "<":
+#         date = date[3:-3]
+#     await interaction.response.send_message("Hello!")
+
+@tree.command(
+    name="update",
+    description="Update les messages de soirée",
+    guild=discord.Object(id=secrets.SERVER_ID)
+)
+async def CommandUpdate(interaction: discord.Interaction):
+    with TRACER.start_as_current_span("update") as span:
+        # recupère le cannal de log
+        _log = bot.get_channel(secrets.LOG_CHANNEL_ID)
+        # envoie un message dans les logs
+        await interaction.response.send_message("Début de la mise à jour des messages")
+
+        await appelMessage()  # appel la fonction de creation de message
+        
+@tree.command(
+    name="planning",
+    description="Vérifie le planning",
+    guild=discord.Object(id=secrets.SERVER_ID)
+)
+async def CommandPlanning(interaction: discord.Interaction):
+    with TRACER.start_as_current_span("update") as span:
+        await interaction.response.send_message("Vérification du planning ...")  # envoie un message
+        # crée une liste correcte et une liste de récupération des valeurs
+        jour = [
+            "Lundi",
+            "Mardi",
+            "Mercredi",
+            "Jeudi",
+            "Vendredi",
+            "Samedi",
+            "Dimanche",
+        ]
+        retour = ["", "", "", "", "", "", ""]
+
+        for i in range(1, 8):  # recupère les valeurs
+            retour[i - 1] = inscription.jourPage(inscription.jourTransfo(i))
+
+        # affiche un retour
+        # print(retour, jour)
+        val = True
+        reponse = ":grey_question:\t\tNom du jour \tNom sur la page\n"
+        for i in range(7):
+            if jour[i] == retour[i]:
+                reponse = reponse + ":white_check_mark:" + "\t\t"
+            else:
+                reponse = reponse + ":x:" + "\t\t"
+                val = False
+            reponse = reponse + jour[i] + "\t\t\t" + retour[i] + "\n"
+
+        if val:
+            reponse = reponse + "\n:white_check_mark: Planning OK"
+        else:
+            reponse = reponse + "\n:x: Erreur Planning"
+
+        await message.channel.send(reponse)  # envoie le message
+
+@tree.command(
+    name="clear",
+    description="Clear le planning d'un jour",
+    guild=discord.Object(id=secrets.SERVER_ID)
+)
+async def CommandClear(interaction: discord.Interaction, jour: typing.Optional[int]):
+    if jour == None:
+        await interaction.response.send_message("spécifier un jour !\n\t1=Lundi ... 7=Dimanche")
+    else:
+        await interaction.response.send_message(f"Nettoyage du jour : {JOURNOM[jour]} ({jour}) !")
+        inscription.clear(jour)
+
+@tree.command(
+    name="adduser",
+    description="Ajoute un utilisateur à la fiche technique",
+    guild=discord.Object(id=secrets.SERVER_ID)
+)
+async def CommandAddUser(interaction: discord.Interaction, uname: str, uid: str):
+    inscription.addUser(uname, uid)
+    reponse = (f":white_check_mark: Ajout de \"{uname}\" avec l'id ``{uid}``")
+    await interaction.response.send_message(reponse)  # envoie un message
+    
+
+
 # event quand le bot est lancé
 @bot.event
 async def on_ready():
@@ -57,9 +159,9 @@ async def on_ready():
     await RandomActivity()
     # activity = discord.Game(name="Attendre")
     # await bot.change_presence(activity=activity)
-    await startloop(datetime.now().minute + 1)
-
-    # print('q')
+    # await startloop(datetime.now().minute + 1)
+    await tree.sync(guild=discord.Object(id=secrets.SERVER_ID))
+    Clear.start()
 
 
 # démarre les évenement répétitif a
@@ -175,121 +277,6 @@ async def on_message(message):
             secrets.CLIENT_ID
         ):
             # COMMANDE
-            # dans le channel de log pas par le bot
-            test = utils.mots(message.content, "update")
-            # si le message comptient "update"
-            if test != -1:
-                with TRACER.start_as_current_span("update") as span:
-                    # recupère le cannal de log
-                    _log = bot.get_channel(secrets.LOG_CHANNEL_ID)
-                    # envoie un message dans les logs
-                    await _log.send("Début de la mise à jour des messages")
-
-                    await appelMessage()  # appel la fonction de creation de message
-
-            test = utils.mots(
-                message.content, "planning"
-            )  # si le message comptient "planning"
-            if test != -1:
-                reponse = ""
-                await message.channel.send(
-                    "Vérification du planning ..."
-                )  # envoie un message
-                # crée une liste correcte et une liste de récupération des valeurs
-                jour = [
-                    "Lundi",
-                    "Mardi",
-                    "Mercredi",
-                    "Jeudi",
-                    "Vendredi",
-                    "Samedi",
-                    "Dimanche",
-                ]
-                retour = ["", "", "", "", "", "", ""]
-
-                for i in range(1, 8):  # recupère les valeurs
-                    retour[i - 1] = inscription.jourPage(inscription.jourTransfo(i))
-
-                # affiche un retour
-                # print(retour, jour)
-                val = True
-                reponse = ":grey_question:\t\tNom du jour \tNom sur la page\n"
-                for i in range(7):
-                    if jour[i] == retour[i]:
-                        reponse = reponse + ":white_check_mark:" + "\t\t"
-                    else:
-                        reponse = reponse + ":x:" + "\t\t"
-                        val = False
-                    reponse = reponse + jour[i] + "\t\t\t" + retour[i] + "\n"
-
-                if val:
-                    reponse = reponse + "\n:white_check_mark: Planning OK"
-                else:
-                    reponse = reponse + "\n:x: Erreur Planning"
-
-                await message.channel.send(reponse)  # envoie le message
-
-            test = utils.mots(message.content, "clear")
-            if test != -1:
-                jour = utils.jour(
-                    message.content
-                )  # regarde si il y a un jour dans le message
-                if jour != 0:  # si le message contient la mention
-                    msg = "Nettoyage du jour : " + str(jour)
-                    await message.channel.send(msg)  # envoie un message
-                    inscription.clear(jour)
-                    await message.channel.send("Nettoyage terminé")  # envoie un message
-
-            test = utils.mots(message.content, "addUser")
-            if test == 0:
-                msg = message.content
-                msg = msg.split(" ")
-                if len(msg) >= 2:
-                    reponse = "Ajout en cours"
-                    await message.channel.send(reponse)  # envoie un message
-                    inscription.addUser(msg[1], msg[2])
-
-                # print(msg)
-
-                reponse = (
-                    ':white_check_mark: Ajout de "'
-                    + msg[1]
-                    + "\" avec l'id ``"
-                    + msg[2]
-                    + "``"
-                )
-                await message.channel.send(reponse)  # envoie un message
-
-            test = utils.mots(message.content, "loop")
-            if test != -1:
-                global loopS
-                if loopS < 00:
-                    msg = message.content
-                    msg = msg.split(" ")
-                    print(msg)
-                    if len(msg) > 2:
-                        reponse = (
-                            ":white_check_mark: Redémarage des évènements répétitifs a : "
-                            + msg[1]
-                        )
-                        await message.channel.send(reponse)  # envoie un message
-                        await startloop(msg[1])
-                    else:
-                        reponse = (
-                            ":white_check_mark: Redémarage des évènements répétitifs"
-                        )
-                        await message.channel.send(reponse)  # envoie un message
-                        await startloop()
-                else:
-                    reponse = (
-                        ":x: Les évènements répétitifs sont déjà lancé et executé a HH:"
-                    )
-                    if loopS < 10:
-                        reponse = reponse + "0" + str(loopS)
-                    else:
-                        reponse = reponse + str(loopS)
-                    await message.channel.send(reponse)  # envoie un message
-
             test = utils.mots(message.content, "stop")
             if test != -1:
                 print(
