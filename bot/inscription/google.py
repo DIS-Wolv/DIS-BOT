@@ -1,5 +1,6 @@
 import pygsheets
 from os import getenv
+from bot import secrets
 
 from dotenv import load_dotenv
 
@@ -12,4 +13,4 @@ if not service_file:
 gc = pygsheets.authorize(service_file=service_file)
 
 # ouverture du google sheet
-sh = gc.open("Planning")
+sh = gc.open(secrets.PLANNING_NAME)

@@ -22,6 +22,7 @@ try:
     SERVER_ID = secrets_json["SERVER_ID"]
     ROLE_ID = secrets_json["ROLE_ID"]
     FNG_ROLE_ID = secrets_json["FNG_ROLE_ID"]
+    PLANNING_NAME = secrets_json["PLANNING_NAME"]
     LINKS = secrets_json["LINKS"]
     DIS_EMOTE_ID = secrets_json["DIS_EMOTE_ID"]
     CDS_EMOTE_ID = secrets_json["CDS_EMOTE_ID"]
