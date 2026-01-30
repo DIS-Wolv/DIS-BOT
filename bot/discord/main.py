@@ -193,15 +193,18 @@ async def CommandAcceuil(interaction: discord.Interaction, member: typing.Option
 # event quand le bot est lancé
 @bot.event
 async def on_ready():
-    print("le bot est connecté")  # affiche dans la console que le bot est démarré
+    log("Bot connected")
+
     # inscription.orga(3)
     await RandomActivity()
     # activity = discord.Game(name="Attendre")
     # await bot.change_presence(activity=activity)
     # await startloop(datetime.now().minute + 1)
     await tree.sync(guild=discord.Object(id=secrets.SERVER_ID))
-    print("Commands synced")
+    log("Commands synced")
+
     Clear.start()
+    log("Loop started")
 
 
 # démarre les évenement répétitif a
