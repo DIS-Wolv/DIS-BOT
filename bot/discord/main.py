@@ -149,6 +149,44 @@ async def CommandAddUser(interaction: discord.Interaction, uname: str, uid: str)
     reponse = (f":white_check_mark: Ajout de \"{uname}\" avec l'id ``{uid}``")
     await interaction.response.send_message(reponse)  # envoie un message
     
+@tree.command(
+    name="activite",
+    description="Change le statut du bot",
+    guild=discord.Object(id=secrets.SERVER_ID)
+)
+async def CommandStatut(interaction: discord.Interaction, statut: typing.Optional[str]):
+    if statut == None:
+        statut = await RandomActivity()
+    else:
+        await SetActivity(statut)
+
+    reponse = f":white_check_mark: changement du statut pour ``Joue à {statut}``"
+    await interaction.response.send_message(reponse)
+
+@tree.command(
+    name="live",
+    description="Change le statut du bot pour mettre le lien d'un live",
+    guild=discord.Object(id=secrets.SERVER_ID)
+)
+async def CommandLive(interaction: discord.Interaction, message: str, liveurl: str):
+    activity = discord.Streaming(name=message, url=liveurl)
+    await bot.change_presence(activity=activity)
+    reponse = f":white_check_mark: changement du statut pour ``Stream {message}``"
+    await interaction.response.send_message(reponse)
+
+@tree.command(
+    name="acceuilmsg",
+    description="Renvoie le message d'acceuil à un membre",
+    guild=discord.Object(id=secrets.SERVER_ID)
+)
+async def CommandAcceuilMsg(interaction: discord.Interaction, member: typing.Optional[discord.Member]):
+    if member != None:
+        await member.send(NEW_MEMBER_MSG)
+        await interaction.response.send_message(f":white_check_mark: Message d'acceuil envoyé en MP a <@{member.id}>")
+    else:
+        await interaction.user.send(NEW_MEMBER_MSG)
+        await interaction.response.send_message(f":white_check_mark: Message d'acceuil envoyé en MP a <@{interaction.user.id}>")
+    await SetActivity(f"Acceuillir {str(member.display_name)}")
 
 
 # event quand le bot est lancé
@@ -161,6 +199,7 @@ async def on_ready():
     # await bot.change_presence(activity=activity)
     # await startloop(datetime.now().minute + 1)
     await tree.sync(guild=discord.Object(id=secrets.SERVER_ID))
+    print("Commands synced")
     Clear.start()
 
 
@@ -297,69 +336,6 @@ async def on_message(message):
                 await message.channel.send("Arret du Bot")
                 await bot.logout()
 
-            test = utils.mots(message.content, "statut")
-            if test == 0:
-                reponse = "Changement du statut"
-                await message.channel.send(reponse)  # envoie un message
-                msg = message.content
-                msg = msg.split(" ")
-                statut = ""
-                print(msg, len(msg))
-                for i in range(1, len(msg)):
-                    statut = statut + msg[i] + " "
-
-                await SetActivity(statut)
-
-                reponse = (
-                    ":white_check_mark: changement du statut pour ``Joue à "
-                    + statut
-                    + "``"
-                )
-                await message.channel.send(reponse)  # envoie un message
-
-            test = utils.mots(message.content, "live")
-            if test == 0:
-                reponse = "Changement du statut"
-                await message.channel.send(reponse)  # envoie un message
-                msg = message.content
-                msg = msg.split(" ")
-
-                statut = ""
-                print(msg, len(msg))
-                for i in range(2, len(msg)):
-                    statut = statut + msg[i] + " "
-
-                activity = discord.Streaming(name=statut, url=msg[1])
-                await bot.change_presence(activity=activity)
-
-                reponse = (
-                    ":white_check_mark: changement du statut pour ``Stream "
-                    + statut
-                    + "``"
-                )
-                await message.channel.send(reponse)  # envoie un message
-
-            test = utils.mots(message.content, "acceuil")
-            if test == 0:
-                msgcont = message.content.split(" ")
-                if len(msgcont) == 2:
-                    serv = bot.get_guild(secrets.SERVER_ID)
-                    member = serv.get_member(int(msgcont[1]))
-                    # print(member.display_name)
-                    # await member.send(NEW_MEMBER_MSG)
-                    await on_member_join(member)
-
-            test = utils.mots(
-                message.content, "randomstatus"
-            )  # si le message comptient "RandomStatus"
-            if test != -1:
-                statut = await RandomActivity()
-                reponse = (
-                    ":white_check_mark: changement du statut pour ``Joue à "
-                    + statut
-                    + "``"
-                )
-                await message.channel.send(reponse)  # envoie un message
 
         test0 = utils.mots(message.content, "sondage")
         test1 = utils.mots(message.content, "réaction")
