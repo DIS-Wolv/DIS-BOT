@@ -175,11 +175,11 @@ async def CommandLive(interaction: discord.Interaction, message: str, liveurl: s
     await interaction.response.send_message(reponse)
 
 @tree.command(
-    name="acceuilmsg",
+    name="acceuil",
     description="Renvoie le message d'acceuil à un membre",
     guild=discord.Object(id=secrets.SERVER_ID)
 )
-async def CommandAcceuilMsg(interaction: discord.Interaction, member: typing.Optional[discord.Member]):
+async def CommandAcceuil(interaction: discord.Interaction, member: typing.Optional[discord.Member]):
     if member != None:
         await member.send(NEW_MEMBER_MSG)
         await interaction.response.send_message(f":white_check_mark: Message d'acceuil envoyé en MP a <@{member.id}>")
