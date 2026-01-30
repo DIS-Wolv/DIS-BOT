@@ -270,20 +270,14 @@ async def on_message(message):
         trace.get_current_span().set_attribute("author", message.author.display_name)
         if str(message.channel.type) == "text":
             # print(type(message.channel.type), message.channel.type, "== 'text'")
-            print(
-                message.channel.name,
-                ">",
-                message.author.display_name,
-                ":",
-                str(message.content),
-            )  # affiche le message dans la console content
+            print(f"{message.channel.name} > {message.author.display_name}: {str(message.content)}")
             span.set_attribute("channel", message.channel.name)
+
         else:
             # print(type(message.channel.type),message.channel.type, "!= 'text'")
-            print(
-                "DM >", message.author.display_name, ":", message.content
-            )  # affiche le message dans la console
+            print(f"DM > {message.author.display_name}: {message.content}")  # affiche le message dans la console
             span.set_attribute("channel", "DM")
+
         if message.channel.id == secrets.CHANNEL_ID:
             # print(message.channel.id, secrets.CHANNEL_ID)
             # si le message contient la mention
@@ -316,9 +310,8 @@ async def on_message(message):
                             str("❌")
                         )  # ajoute les réactions d'inscriptions
 
-        elif message.channel.id == secrets.LOG_CHANNEL_ID and message.author.id != int(
-            secrets.CLIENT_ID
-        ):
+        elif message.channel.id == secrets.LOG_CHANNEL_ID and message.author.id != int(secrets.CLIENT_ID):
+
             # COMMANDE
             test = utils.mots(message.content, "stop")
             if test != -1:
