@@ -183,10 +183,11 @@ async def CommandAcceuil(interaction: discord.Interaction, member: typing.Option
     if member != None:
         await member.send(NEW_MEMBER_MSG)
         await interaction.response.send_message(f":white_check_mark: Message d'acceuil envoyé en MP a <@{member.id}>")
+        await SetActivity(f"Acceuillir {str(member.display_name)}")
     else:
         await interaction.user.send(NEW_MEMBER_MSG)
         await interaction.response.send_message(f":white_check_mark: Message d'acceuil envoyé en MP a <@{interaction.user.id}>")
-    await SetActivity(f"Acceuillir {str(member.display_name)}")
+        await SetActivity(f"Acceuillir {str(interaction.user.display_name)}")
 
 
 # event quand le bot est lancé
