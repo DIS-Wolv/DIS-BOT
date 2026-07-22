@@ -216,6 +216,7 @@ async def on_ready():
     log("Commands synced")
 
     Clear.start()
+    Messages.start()
     log("Loop started")
 
 
@@ -785,8 +786,8 @@ async def loop():
         if hour <= 2:  # si l'heure est inférieure ou égale a 2
             print("clear")
         elif 10 <= hour <= 21:  # si l'heure est entre 10h et 21 h
-            await appelMessage()
-            # print("appelMessage")
+            # await appelMessage()
+            print("appelMessage")
 
         day = day + 1
         if day == 8:
