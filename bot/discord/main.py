@@ -49,6 +49,18 @@ JOURNOM = [
         "Dimanche",
     ]
 
+TimeZone=timezone(timedelta(hours=1))  # Heure de Paris (UTC+1)
+
+timesClear = [
+    time(hour=11, minute=38, tzinfo=TimeZone)
+]
+timesMessages = [
+    time(hour=10, tzinfo=TimeZone)
+]
+timesRappel = [
+    time(hour=20, minute=30, tzinfo=TimeZone)
+]
+
 global loopS
 loopS = -1
 
@@ -792,18 +804,6 @@ async def RandomActivity():
     await SetActivity(nom)
     return nom
 
-TimeZone=timezone(timedelta(hours=1))  # Heure de Paris (UTC+1)
-
-timesClear = [
-    time(hour=11, minute=38, tzinfo=TimeZone)
-]
-timesMessages = [
-    time(hour=10, tzinfo=TimeZone)
-]
-timesRappel = [
-    time(hour=20, minute=30, tzinfo=TimeZone)
-]
-
 @tasks.loop(time=timesClear)
 async def Clear():
     with TRACER.start_as_current_span("ClearLoop"):        
@@ -866,7 +866,6 @@ async def Clear():
                         await message.delete()  # supprime le message
         else:
             print("Pas de nettoyage a faire")
-
 
 @tasks.loop(time=timesMessages)
 async def Messages():
